@@ -1,0 +1,33 @@
+{
+    "name": "comphppuebla/restful-extensions",
+    "description": "Extensions to create a RESTful API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luis Montealegre",
+            "email": "luis.montealegre@mandragora-web-systems.com",
+            "role": "developer"
+        },
+        {
+            "name": "Misraim Mendoza",
+            "email": "misraim.mendoza@mandragora-web-systems.com",
+            "role": "developer"
+        }
+    ],
+    "require": {
+        "slim/slim": "2.3.3",
+        "doctrine/dbal": "v2.4.0",
+        "willdurand/negotiation": "1.0.1",
+        "vlucas/valitron": "1.1.4",
+        "slim/views": "0.1.0",
+        "twig/twig": "v1.14.0",
+        "pagerfanta/pagerfanta": "v1.0.1",
+        "zendframework/zend-eventmanager": "2.2.4",
+        "zircote/hal": "0.3.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "ComPHPPuebla": "src"
+        }
+    }
+}
