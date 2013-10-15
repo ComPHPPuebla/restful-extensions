@@ -10,7 +10,8 @@ class ErrorHandler extends Handler
         $this->app->log->error($e);
 
         $this->app->status(500);
-        $this->app->render("error/exception.{$this->app->viewExtension}.twig", [
+        $this->app->contentType('text/plain');
+        $this->app->render("error/exception.text.twig", [
             'exception' => (string)$e,
             'mode' => $this->app->getMode(),
         ]);

@@ -2,7 +2,7 @@
 namespace ComPHPPuebla\Model;
 
 use \ComPHPPuebla\Validator\Validator;
-use \ComPHPPuebla\Doctrine\Repository;
+use \ComPHPPuebla\Doctrine\TableGateway\Table;
 
 class Model implements Validator
 {
@@ -27,11 +27,11 @@ class Model implements Validator
     protected $validator;
 
     /**
-     * @param Repository $repository
+     * @param Table $table
      */
-    public function __construct(Repository $repository, Validator $validator)
+    public function __construct(Table $table, Validator $validator)
     {
-        $this->repository = $repository;
+        $this->table = $table;
         $this->validator = $validator;
         $this->optionsList = ['GET', 'POST', 'OPTIONS'];
         $this->options = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'];
@@ -43,8 +43,8 @@ class Model implements Validator
      */
     public function retrieveAll(array $criteria)
     {
-        $collection = $this->repository->findAll($criteria);
-        $collection['count'] = $this->repository->count();
+        $collection = $this->table->findAll($criteria);
+        $collection['count'] = $this->table->count();
 
         return $collection;
     }
@@ -56,7 +56,7 @@ class Model implements Validator
      */
     public function retrieveOne($id)
     {
-        return $this->repository->find($id);
+        return $this->table->find($id);
     }
 
     /**
@@ -66,9 +66,9 @@ class Model implements Validator
      */
     public function create(array $newResource)
     {
-        $id = $this->repository->insert($newResource);
+        $id = $this->table->insert($newResource);
 
-        return $this->repository->find($id);
+        return $this->table->find($id);
     }
 
     /**
@@ -78,15 +78,15 @@ class Model implements Validator
      */
     public function update(array $resourceValues, $id)
     {
-        return $this->repository->update($resourceValues, $id);
+        return $this->table->update($resourceValues, $id);
     }
 
     /**
-     * @param int $stationId
+     * @param int $id
      */
-    public function delete($stationId)
+    public function delete($id)
     {
-        $this->repository->delete($stationId);
+        $this->table->delete($id);
     }
 
     /**
