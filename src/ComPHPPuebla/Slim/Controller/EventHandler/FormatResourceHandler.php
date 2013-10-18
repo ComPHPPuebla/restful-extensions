@@ -1,10 +1,10 @@
 <?php
-namespace ComPHPPuebla\Event;
+namespace ComPHPPuebla\Controller\EventHandler;
 
 use \Zend\EventManager\Event;
 use \ComPHPPuebla\Hypermedia\Formatter\HAL\Formatter;
 
-class FormatResourceEvent
+class FormatResourceHandler
 {
     /**
      * @var Formatter
@@ -26,16 +26,7 @@ class FormatResourceEvent
      */
     public function __invoke(Event $event)
     {
-        if (400 === $event->getParam('response')->getStatus()) {
-
-            return; //A validation error occured
-        }
-
         $resource = $event->getParam('resource');
-        if (empty($resource)) {
-
-            return;
-        }
 
         $event->setParam(
             'resource', $this->formatter->format($resource, $event->getParam('request')->params())

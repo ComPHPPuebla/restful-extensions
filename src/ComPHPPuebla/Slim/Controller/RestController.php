@@ -1,9 +1,11 @@
 <?php
 namespace ComPHPPuebla\Slim\Controller;
 
-use \ReflectionMethod;
+use \Iterator;
 use \Zend\EventManager\EventManagerInterface;
 use \ComPHPPuebla\Model\Model;
+use \ComPHPPuebla\Controller\Exception\ResourceNotFoundException;
+use \ComPHPPuebla\Controller\Exception\BadRequestParameters;
 
 class RestController extends SlimController
 {
@@ -42,16 +44,23 @@ class RestController extends SlimController
      */
     public function get($id)
     {
-        return $this->findById($id);
+        try {
+
+            $resource = $this->findById($id);
+            $this->triggerPostDispatch($resource);
+
+        } catch(ResourceNotFoundException $e) {
+            $this->response->status(404); //Not Found
+        }
     }
 
     /**
-     * @param ResourceCollection $collection
      * @return array
      */
     public function getList()
     {
-        return $this->model->retrieveAll($this->request->params());
+        $resources = $this->model->retrieveAll($this->request->params());
+        $this->triggerPostDispatch($resources);
     }
 
     /**
@@ -60,17 +69,16 @@ class RestController extends SlimController
      */
     public function post()
     {
-        parse_str($this->request->getBody(), $values);
+        try {
+            parse_str($this->request->getBody(), $values);
+            $this->validate($values);
+            $resource = $this->model->create($values);
+            $this->response->setStatus(201); //Created
+            $this->triggerPostDispatch($resource);
 
-        if (!$this->validate($values)) {
-
-            return $this->model->errors();
+        } catch (BadRequestParameters $e) {
+            $this->handleBadRequest();
         }
-
-        $resource = $this->model->create($values);
-        $this->response->setStatus(201); //Created
-
-        return $resource;
     }
 
     /**
@@ -80,20 +88,18 @@ class RestController extends SlimController
      */
     public function put($id)
     {
-        $resource = $this->findById($id);
-        if (!$resource) {
+        try {
+            $resource = $this->findById($id);
+            parse_str($this->request->getBody(), $values);
+            $this->validate(array_merge($resource, $values));
+            $resource = $this->model->update($values, $id);
+            $this->triggerPostDispatch($resource);
 
-            return;
+        } catch(ResourceNotFoundException $e) {
+            $this->response->status(404); //Not Found
+        } catch (BadRequestParameters $e) {
+            $this->handleBadRequest();
         }
-
-        parse_str($this->request->getBody(), $values);
-
-        if (!$this->validate(array_merge($resource, $values))) {
-
-            return $this->model->errors();
-        }
-
-        return $this->model->update($values, $id);
     }
 
     /**
@@ -101,14 +107,14 @@ class RestController extends SlimController
      */
     public function delete($id)
     {
-        $resource = $this->findById($id);
-        if (!$resource) {
+        try {
+            $resource = $this->findById($id);
+            $this->model->delete($id);
+            $this->response->status(204); //No Content
 
-            return;
+        } catch(ResourceNotFoundException $e) {
+            $this->response->status(404); //Not Found
         }
-
-        $this->model->delete($id);
-        $this->response->status(204); //No Content
     }
 
     /**
@@ -128,17 +134,16 @@ class RestController extends SlimController
     }
 
     /**
-     * @return array
+     * @param int $id
+     * @throws ResourceNotFoundException
      */
     protected function findById($id)
     {
-        $resource = $this->model->retrieveOne($id);
+        if ($resource = $this->model->retrieveOne($id)) {
 
-        if (!$resource) {
-            $this->response->status(404); //Not found
+            return $resource;
         }
-
-        return $resource;
+        throw new ResourceNotFoundException("Resource with ID: $id, cannot be found");
     }
 
     /**
@@ -147,24 +152,27 @@ class RestController extends SlimController
      */
     protected function validate(array $values)
     {
-        $isValid = $this->model->isValid($values);
-        if (!$isValid) {
-            $this->response->setStatus(400); //Bad request
-        }
+        if (!$this->model->isValid($values)) {
 
-        return $isValid;
+            throw new BadRequestParameters('Resource values are invalid');
+        }
     }
 
     /**
-     * @param string $methodName
-     * @param array $params
      * @return void
      */
-    public function dispatch($methodName, array $params = [])
+    protected function handleBadRequest()
     {
-        $method = new ReflectionMethod(__CLASS__, $methodName);
-        $resource = $method->invokeArgs($this, $params);
+        $this->response->setStatus(400); //Bad request
+        $errors = $this->model->errors();
+        $this->triggerPostDispatch($errors);
+    }
 
+    /**
+     * @param Iterator $resource
+     */
+    protected function triggerPostDispatch(Iterator $resource)
+    {
         $argv = [
             'resource' => $resource, 'request' => $this->request, 'response' => $this->response
         ];

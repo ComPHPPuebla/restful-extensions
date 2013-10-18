@@ -4,11 +4,6 @@ namespace ComPHPPuebla\Paginator;
 interface Paginator
 {
     /**
-     * @param int $maxPerPage
-     */
-    public function setMaxPerPage($maxPerPage);
-
-    /**
      * @return array
      */
     public function getCurrentPageResults();
@@ -37,10 +32,4 @@ interface Paginator
      * @return int
      */
     public function getNbPages();
-
-    /**
-     * @param array $results
-     * @param int $count
-     */
-    public function setResults(array $results, $count);
 }

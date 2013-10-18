@@ -16,11 +16,17 @@ class ValitronValidator implements Validator
     protected $validator;
 
     /**
+     * @var string
+     */
+    protected $pathToTranslations;
+
+    /**
      * @param array $rules
      */
-    public function __construct(array $rules)
+    public function __construct(array $rules, $pathToTranslations = 'config/validations')
     {
         $this->rules = $rules;
+        $this->pathToTranslations = $pathToTranslations;
     }
 
     /**
@@ -29,7 +35,7 @@ class ValitronValidator implements Validator
      */
     public function isValid(array $values)
     {
-        $this->validator = new Valitron($values, [], 'en', 'config/validations');
+        $this->validator = new Valitron($values, [], 'en', $this->pathToTranslations);
         $this->validator->rules($this->rules);
 
         return $this->validator->validate();

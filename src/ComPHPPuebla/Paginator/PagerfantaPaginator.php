@@ -1,20 +1,30 @@
 <?php
 namespace ComPHPPuebla\Paginator;
 
-use \Pagerfanta\Adapter\FixedAdapter;
+use Doctrine\DBAL\Query\QueryBuilder;
+
+use \Pagerfanta\Adapter\DoctrineDbalAdapter;
 use \Pagerfanta\Pagerfanta;
 
-class PagerFantaPaginator implements Paginator
+class PagerfantaPaginator implements Paginator
 {
     /**
      * @var Pagerfanta
      */
-    protected $pagerFanta;
+    protected $pagerfanta;
 
     /**
      * @var int
      */
     protected $maxPerPage;
+
+    /**
+     * @param int $defaultMaxPerPage
+     */
+    public function __construct($defaultMaxPerPage)
+    {
+        $this->maxPerPage = $defaultMaxPerPage;
+    }
 
     /**
      * @param int $maxPerPage
@@ -29,7 +39,7 @@ class PagerFantaPaginator implements Paginator
      */
     public function getCurrentPageResults()
     {
-        return $this->pagerFanta->getCurrentPageResults();
+        return $this->pagerfanta->getCurrentPageResults();
     }
 
     /**
@@ -37,7 +47,7 @@ class PagerFantaPaginator implements Paginator
      */
     public function setCurrentPage($currentPage)
     {
-        $this->pagerFanta->setCurrentPage($currentPage);
+        $this->pagerfanta->setCurrentPage($currentPage);
     }
 
     /**
@@ -45,7 +55,7 @@ class PagerFantaPaginator implements Paginator
      */
     public function haveToPaginate()
     {
-        return $this->pagerFanta->haveToPaginate();
+        return $this->pagerfanta->haveToPaginate();
     }
 
     /**
@@ -53,7 +63,7 @@ class PagerFantaPaginator implements Paginator
      */
     public function hasNextPage()
     {
-        return $this->pagerFanta->hasNextPage();
+        return $this->pagerfanta->hasNextPage();
     }
 
     /**
@@ -61,7 +71,7 @@ class PagerFantaPaginator implements Paginator
      */
     public function getNextPage()
     {
-        return $this->pagerFanta->getNextPage();
+        return $this->pagerfanta->getNextPage();
     }
 
     /**
@@ -69,7 +79,7 @@ class PagerFantaPaginator implements Paginator
      */
     public function hasPreviousPage()
     {
-        return $this->pagerFanta->hasPreviousPage();
+        return $this->pagerfanta->hasPreviousPage();
     }
 
     /**
@@ -77,7 +87,7 @@ class PagerFantaPaginator implements Paginator
      */
     public function getPreviousPage()
     {
-        return $this->pagerFanta->getPreviousPage();
+        return $this->pagerfanta->getPreviousPage();
     }
 
     /**
@@ -85,16 +95,16 @@ class PagerFantaPaginator implements Paginator
      */
     public function getNbPages()
     {
-        return $this->pagerFanta->getNbPages();
+        return $this->pagerfanta->getNbPages();
     }
 
     /**
-     * @param array $results
-     * @param int $count
+     * @param QueryBuilder $qb
+     * @param callable $countModifier
      */
-    public function setResults(array $results, $count)
+    public function initAdapter(QueryBuilder $qb, $countModifier)
     {
-        $this->pagerFanta = new Pagerfanta(new FixedAdapter($count, $results));
-        $this->pagerFanta->setMaxPerPage($this->maxPerPage);
+        $this->pagerfanta = new Pagerfanta(new DoctrineDbalAdapter($qb, $countModifier));
+        $this->pagerfanta->setMaxPerPage($this->maxPerPage);
     }
 }

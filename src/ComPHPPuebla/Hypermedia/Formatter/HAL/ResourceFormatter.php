@@ -2,6 +2,7 @@
 namespace ComPHPPuebla\Hypermedia\Formatter\HAL;
 
 use \Slim\Views\TwigExtension;
+use \IteratorAggregate;
 
 class ResourceFormatter extends Formatter
 {
@@ -24,7 +25,7 @@ class ResourceFormatter extends Formatter
      * @param array $params
      * @return array
      */
-    public function format(array $resource, array $params)
+    public function format(IteratorAggregate $resource, array $params)
     {
         $halResource = ['links' => []];
 

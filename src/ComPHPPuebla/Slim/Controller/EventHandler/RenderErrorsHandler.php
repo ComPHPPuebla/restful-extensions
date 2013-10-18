@@ -6,7 +6,7 @@ use \Slim\Http\Request;
 use \Zend\EventManager\Event;
 use \Slim\View;
 
-class RenderViewEvent
+class RenderErrorsHandler
 {
     /**
      * @var View
@@ -30,40 +30,8 @@ class RenderViewEvent
     {
         $resource = $event->getParam('resource');
         $response = $event->getParam('response');
-        $request = $event->getParam('request');
 
-        if (400 === $response->getStatus()) {
-            $this->renderErrors($resource, $response);
-
-            return;
-        }
-
-        if ($resource && $this->responseNeedsBody($request)) {
-
-            $body = $this->renderView($resource, $response);
-            $response->setBody($body);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return boolean
-     */
-    protected function responseNeedsBody(Request $request)
-    {
-        return !$request->isHead() && !$request->isOptions() && !$request->isDelete();
-    }
-
-    /**
-     * @param array $resource
-     * @return string
-     */
-    public function renderView(array $resource, Response $response)
-    {
-        $viewExtension = $this->getViewExtension($response);
-        $this->view->setData(['resource' => $resource]);
-
-        return $this->view->display("resource/show.$viewExtension.twig");
+        $this->renderErrors($resource, $response);
     }
 
     /**

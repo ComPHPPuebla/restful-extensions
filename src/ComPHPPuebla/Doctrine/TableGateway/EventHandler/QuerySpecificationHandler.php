@@ -1,10 +1,10 @@
 <?php
-namespace ComPHPPuebla\Event;
+namespace ComPHPPuebla\Doctrine\TableGateway\EventHandler;
 
 use \Zend\EventManager\Event;
 use \ComPHPPuebla\Doctrine\Specification\QueryBuilderSpecification;
 
-class QuerySpecificationEvent
+class QuerySpecificationHandler
 {
     /**
      * @var QueryBuilderSpecification

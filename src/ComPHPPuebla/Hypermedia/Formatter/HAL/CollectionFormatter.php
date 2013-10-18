@@ -3,14 +3,10 @@ namespace ComPHPPuebla\Hypermedia\Formatter\HAL;
 
 use \Slim\Views\TwigExtension;
 use \ComPHPPuebla\Paginator\Paginator;
+use \IteratorAggregate;
 
 class CollectionFormatter extends Formatter
 {
-    /**
-     * @var Paginator
-     */
-    protected $paginator;
-
     /**
      * @var ResourceFormatter
      */
@@ -19,12 +15,9 @@ class CollectionFormatter extends Formatter
     /**
      * @param Paginator $paginator
      */
-    public function __construct(
-        TwigExtension $urlHelper, $routeName, Paginator $paginator, ResourceFormatter $formatter
-    )
+    public function __construct(TwigExtension $urlHelper, $routeName, ResourceFormatter $formatter)
     {
         parent::__construct($urlHelper, $routeName);
-        $this->paginator = $paginator;
         $this->formatter = $formatter;
     }
 
@@ -34,17 +27,17 @@ class CollectionFormatter extends Formatter
      * @param array $params
      * @param string $routeName
      */
-    public function format(array $resources, array $params)
+    public function format(IteratorAggregate $paginator, array $params)
     {
-        $this->setResources($resources);
-
         $halCollection = ['links' => []];
 
-        $halCollection['links'] = $this->createPaginationLinks($this->routeName, $params);
+        $halCollection['links'] = $this->createPaginationLinks(
+            $paginator, $this->routeName, $params
+        );
         $halCollection['links']['self'] = $this->buildUrl($this->routeName, $params);
 
         $embedded = [];
-        foreach ($this->paginator->getCurrentPageResults() as $resource) {
+        foreach ($paginator->getCurrentPageResults() as $resource) {
             $embedded[][$this->routeName] = $this->formatter->format($resource, $params);
         }
 
@@ -54,46 +47,37 @@ class CollectionFormatter extends Formatter
         return $halCollection;
     }
 
-    /**
-     * @param array $items
-     */
-    protected function setResources(array $items)
-    {
-        $count = $items['count'];
-        unset($items['count']);
-        $this->paginator->setResults($items, $count);
-    }
 
     /**
      * @param string   $routeName
      * @param array $params
      */
-    protected function createPaginationLinks($routeName, array $params)
+    protected function createPaginationLinks(IteratorAggregate $paginator, $routeName, array $params)
     {
         if (!isset($params['page'])) {
 
             return [];
         }
 
-        $this->paginator->setCurrentPage($params['page']);
+        $paginator->setCurrentPage($params['page']);
 
         $links = [];
-        if ($this->paginator->haveToPaginate()) {
+        if ($paginator->haveToPaginate()) {
 
             $params['page'] = 1;
             $links['first'] = $this->buildUrl($routeName, $params);
 
-            if ($this->paginator->hasNextPage()) {
+            if ($paginator->hasNextPage()) {
                 $params['page'] = $this->paginator->getNextPage();
                 $links['next'] = $this->buildUrl($routeName, $params);
             }
 
-            if ($this->paginator->hasPreviousPage()) {
+            if ($paginator->hasPreviousPage()) {
                 $params['page'] = $this->paginator->getPreviousPage();
                 $links['prev'] = $this->buildUrl($routeName, $params);
             }
 
-            $params['page'] = $this->paginator->getNbPages();
+            $params['page'] = $paginator->getNbPages();
             $links['last'] = $this->buildUrl($routeName, $params);
         }
 

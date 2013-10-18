@@ -1,6 +1,8 @@
 <?php
 namespace ComPHPPuebla\Doctrine\TableGateway;
 
+use \ComPHPPuebla\Paginator\PagerfantaPaginator;
+use \Doctrine\DBAL\Query\QueryBuilder;
 use \Doctrine\DBAL\Connection;
 use \Zend\EventManager\EventManagerInterface;
 
@@ -106,37 +108,37 @@ abstract class Table
 
     /**
      * @param array $criteria
-     * @return array
+     * @return ComPHPPuebla\Paginator\Paginator
      */
     abstract public function findAll(array $criteria);
 
     /**
      * @param array $values
      * @return array
-    */
+     */
     abstract public function insert(array $values);
 
     /**
      * @param int
      * @return array
-    */
+     */
     abstract public function find($id);
 
     /**
      * @param array $values
      * @param int $id
      * @return array
-    */
+     */
     abstract public function update(array $values, $id);
 
     /**
      * @param int $id
      * @return void
-    */
+     */
     abstract public function delete($id);
 
     /**
      * return int
-    */
-    abstract public function count(array $criteria = []);
+     */
+    abstract public function count(QueryBuilder $qb);
 }
