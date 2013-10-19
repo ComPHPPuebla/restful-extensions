@@ -1,12 +1,12 @@
 <?php
 namespace ComPHPPuebla\Paginator;
 
-use Doctrine\DBAL\Query\QueryBuilder;
-
+use \Doctrine\DBAL\Query\QueryBuilder;
 use \Pagerfanta\Adapter\DoctrineDbalAdapter;
 use \Pagerfanta\Pagerfanta;
+use \IteratorAggregate;
 
-class PagerfantaPaginator implements Paginator
+class PagerfantaPaginator implements Paginator, IteratorAggregate
 {
     /**
      * @var Pagerfanta
@@ -106,5 +106,13 @@ class PagerfantaPaginator implements Paginator
     {
         $this->pagerfanta = new Pagerfanta(new DoctrineDbalAdapter($qb, $countModifier));
         $this->pagerfanta->setMaxPerPage($this->maxPerPage);
+    }
+
+    /**
+     * @see IteratorAggregate::getIterator()
+     */
+    public function getIterator()
+    {
+        return $this->pagerfanta;
     }
 }

@@ -2,7 +2,7 @@
 namespace ComPHPPuebla\Hypermedia\Formatter\HAL;
 
 use \Slim\Views\TwigExtension;
-use \ComPHPPuebla\Paginator\Paginator;
+use \ArrayObject;
 use \IteratorAggregate;
 
 class CollectionFormatter extends Formatter
@@ -38,7 +38,10 @@ class CollectionFormatter extends Formatter
 
         $embedded = [];
         foreach ($paginator->getCurrentPageResults() as $resource) {
-            $embedded[][$this->routeName] = $this->formatter->format($resource, $params);
+
+            $embedded[][$this->routeName] = $this->formatter->format(
+                new ArrayObject($resource), $params
+            );
         }
 
         $halCollection['embedded'] = $embedded;
@@ -46,7 +49,6 @@ class CollectionFormatter extends Formatter
 
         return $halCollection;
     }
-
 
     /**
      * @param string   $routeName
