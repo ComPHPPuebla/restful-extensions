@@ -1,8 +1,9 @@
 <?php
-namespace ComPHPPuebla\Controller\EventHandler;
+namespace ComPHPPuebla\Slim\Controller\EventHandler;
 
 use \Zend\EventManager\Event;
 use \ComPHPPuebla\Hypermedia\Formatter\HAL\Formatter;
+use \ArrayObject;
 
 class FormatResourceHandler
 {
@@ -26,10 +27,11 @@ class FormatResourceHandler
      */
     public function __invoke(Event $event)
     {
-        $resource = $event->getParam('resource');
+        $resource = new ArrayObject($event->getParam('resource'));
+        $request = $event->getParam('request');
 
-        $event->setParam(
-            'resource', $this->formatter->format($resource, $event->getParam('request')->params())
-        );
+        $formattedResource = $this->formatter->format($resource, $request->params());
+
+        $event->setParam('resource', $formattedResource);
     }
 }
