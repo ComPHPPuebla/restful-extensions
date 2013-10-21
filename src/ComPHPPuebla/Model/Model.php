@@ -3,6 +3,7 @@ namespace ComPHPPuebla\Model;
 
 use \ComPHPPuebla\Validator\Validator;
 use \ComPHPPuebla\Doctrine\TableGateway\Table;
+use \ArrayObject;
 
 class Model implements Validator
 {
