@@ -43,10 +43,7 @@ class Model implements Validator
      */
     public function retrieveAll(array $criteria)
     {
-        $collection = $this->table->findAll($criteria);
-        $collection['count'] = $this->table->count();
-
-        return $collection;
+        return $this->table->findAll($criteria);
     }
 
     /**
@@ -56,7 +53,9 @@ class Model implements Validator
      */
     public function retrieveOne($id)
     {
-        return $this->table->find($id);
+        $resource = $this->table->find($id);
+
+        return is_array($resource) ? new ArrayObject($resource) : $resource;
     }
 
     /**
@@ -68,7 +67,7 @@ class Model implements Validator
     {
         $id = $this->table->insert($newResource);
 
-        return $this->table->find($id);
+        return $this->retrieveOne($id);
     }
 
     /**
@@ -78,7 +77,7 @@ class Model implements Validator
      */
     public function update(array $resourceValues, $id)
     {
-        return $this->table->update($resourceValues, $id);
+        return new ArrayObject($this->table->update($resourceValues, $id));
     }
 
     /**
@@ -103,6 +102,22 @@ class Model implements Validator
      */
     public function errors()
     {
-        return $this->validator->errors();
+        return new ArrayObject($this->validator->errors());
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptionsList()
+    {
+        return $this->optionsList;
     }
 }

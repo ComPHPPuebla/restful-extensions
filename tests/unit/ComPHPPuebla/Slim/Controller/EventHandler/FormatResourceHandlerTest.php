@@ -4,6 +4,7 @@ namespace ComPHPPuebla\Slim\Controller\EventHandler;
 use \Zend\EventManager\Event;
 use \Zend\EventManager\EventManager;
 use \PHPUnit_Framework_TestCase as TestCase;
+use \ArrayObject;
 
 class FormatResourceHandlerTest extends TestCase
 {
@@ -41,7 +42,9 @@ class FormatResourceHandlerTest extends TestCase
         $eventManager = new EventManager();
         $eventManager->attach('formatResource', $resourceFormatterHandler);
 
-        $resource = ['user_id' => 1, 'username' => 'luis', 'password' => 'changeme'];
+        $resource = new ArrayObject(
+            ['user_id' => 1, 'username' => 'luis', 'password' => 'changeme']
+        );
 
         $event = new Event('formatResource');
         $event->setTarget($this)->setParams(['resource' => $resource, 'request' => $request]);

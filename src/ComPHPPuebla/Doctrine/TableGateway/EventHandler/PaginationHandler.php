@@ -32,7 +32,6 @@ class PaginationHandler
 
         if (!isset($criteria['page'])) {
             $criteria['page'] = 1;
-            $criteria['page_size'] = $table->count($criteria); //Show all pages
         }
 
         $this->paginator->initAdapter($qb, array($table, 'count'));

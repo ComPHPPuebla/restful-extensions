@@ -33,7 +33,7 @@ class ResourceFormatter extends Formatter
             $this->urlHelper->urlFor($this->routeName, ['id' => $resource[$this->resourceKeyId]])
         );
 
-        $halResource['data'] = $resource;
+        $halResource['data'] = $resource->getIterator()->getArrayCopy();
 
         return $halResource;
     }

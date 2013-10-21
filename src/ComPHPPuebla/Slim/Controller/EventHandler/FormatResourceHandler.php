@@ -27,7 +27,7 @@ class FormatResourceHandler
      */
     public function __invoke(Event $event)
     {
-        $resource = new ArrayObject($event->getParam('resource'));
+        $resource = $event->getParam('resource');
         $request = $event->getParam('request');
 
         $formattedResource = $this->formatter->format($resource, $request->params());

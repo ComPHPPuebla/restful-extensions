@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Controller\Exception;
+namespace ComPHPPuebla\Slim\Controller\Exception;
 
 use \RuntimeException;
 

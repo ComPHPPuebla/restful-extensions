@@ -13,7 +13,9 @@ class CollectionFormatter extends Formatter
     protected $formatter;
 
     /**
-     * @param Paginator $paginator
+     * @param TwigExtension $urlHelper
+     * @param string $routeName
+     * @param ResourceFormatter $formatter
      */
     public function __construct(TwigExtension $urlHelper, $routeName, ResourceFormatter $formatter)
     {
@@ -70,12 +72,12 @@ class CollectionFormatter extends Formatter
             $links['first'] = $this->buildUrl($routeName, $params);
 
             if ($paginator->hasNextPage()) {
-                $params['page'] = $this->paginator->getNextPage();
+                $params['page'] = $paginator->getNextPage();
                 $links['next'] = $this->buildUrl($routeName, $params);
             }
 
             if ($paginator->hasPreviousPage()) {
-                $params['page'] = $this->paginator->getPreviousPage();
+                $params['page'] = $paginator->getPreviousPage();
                 $links['prev'] = $this->buildUrl($routeName, $params);
             }
 

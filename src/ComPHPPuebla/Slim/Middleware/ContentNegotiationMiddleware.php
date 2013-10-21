@@ -46,7 +46,6 @@ class ContentNegotiationMiddleware extends Middleware
         }
 
         $this->app->status(406); //Not acceptable
-        $this->app->stop();
     }
 
     /**

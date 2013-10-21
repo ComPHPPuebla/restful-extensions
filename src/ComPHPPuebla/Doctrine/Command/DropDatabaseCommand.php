@@ -49,7 +49,7 @@ EOT
     {
         $connection = $this->getHelper('db')->getConnection();
         $params = $connection->getParams();
-        $name = $this->getDatabaseName();
+        $name = $this->getDatabaseName($params);
 
         if ($input->getOption('force')) {
 
@@ -74,10 +74,11 @@ EOT
     }
 
     /**
+     * @var array $params
      * @throws InvalidArgumentException
      * @return string
      */
-    protected function getDatabaseName()
+    protected function getDatabaseName(array $params)
     {
         $name = false;
         if (isset($params['path'])) {

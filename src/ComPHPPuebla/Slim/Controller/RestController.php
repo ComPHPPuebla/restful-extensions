@@ -1,11 +1,11 @@
 <?php
 namespace ComPHPPuebla\Slim\Controller;
 
-use \Iterator;
 use \Zend\EventManager\EventManagerInterface;
 use \ComPHPPuebla\Model\Model;
-use \ComPHPPuebla\Controller\Exception\ResourceNotFoundException;
-use \ComPHPPuebla\Controller\Exception\BadRequestParameters;
+use \ComPHPPuebla\Slim\Controller\Exception\ResourceNotFoundException;
+use \ComPHPPuebla\Slim\Controller\Exception\BadRequestParameters;
+use \IteratorAggregate;
 
 class RestController extends SlimController
 {
@@ -47,7 +47,7 @@ class RestController extends SlimController
         try {
 
             $resource = $this->findById($id);
-            $this->triggerPostDispatch($resource);
+            $this->triggerEvent('postDispatch', $resource);
 
         } catch(ResourceNotFoundException $e) {
             $this->response->status(404); //Not Found
@@ -60,7 +60,7 @@ class RestController extends SlimController
     public function getList()
     {
         $resources = $this->model->retrieveAll($this->request->params());
-        $this->triggerPostDispatch($resources);
+        $this->triggerEvent('postDispatch', $resources);
     }
 
     /**
@@ -74,7 +74,7 @@ class RestController extends SlimController
             $this->validate($values);
             $resource = $this->model->create($values);
             $this->response->setStatus(201); //Created
-            $this->triggerPostDispatch($resource);
+            $this->triggerEvent('postDispatch', $resource);
 
         } catch (BadRequestParameters $e) {
             $this->handleBadRequest();
@@ -91,9 +91,9 @@ class RestController extends SlimController
         try {
             $resource = $this->findById($id);
             parse_str($this->request->getBody(), $values);
-            $this->validate(array_merge($resource, $values));
+            $this->validate(array_merge($resource->getArrayCopy(), $values));
             $resource = $this->model->update($values, $id);
-            $this->triggerPostDispatch($resource);
+            $this->triggerEvent('postDispatch', $resource);
 
         } catch(ResourceNotFoundException $e) {
             $this->response->status(404); //Not Found
@@ -122,7 +122,7 @@ class RestController extends SlimController
      */
     public function optionsList()
     {
-        $this->response->headers->set('Allow', implode(',', $this->optionsList));
+        $this->response->headers->set('Allow', implode(',', $this->model->getOptionsList()));
     }
 
     /**
@@ -130,7 +130,7 @@ class RestController extends SlimController
      */
     public function options()
     {
-        $this->response->headers->set('Allow', implode(',', $this->options));
+        $this->response->headers->set('Allow', implode(',', $this->model->getOptions()));
     }
 
     /**
@@ -165,17 +165,18 @@ class RestController extends SlimController
     {
         $this->response->setStatus(400); //Bad request
         $errors = $this->model->errors();
-        $this->triggerPostDispatch($errors);
+        $this->triggerEvent('renderErrors', $errors);
     }
 
     /**
-     * @param Iterator $resource
+     * @param string $name
+     * @param IteratorAggregate $resource
      */
-    protected function triggerPostDispatch(Iterator $resource)
+    protected function triggerEvent($name, IteratorAggregate $resource)
     {
         $argv = [
             'resource' => $resource, 'request' => $this->request, 'response' => $this->response
         ];
-        $this->eventManager->trigger('postDispatch', $this, $argv);
+        $this->eventManager->trigger($name, $this, $argv);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Event;
+namespace ComPHPPuebla\Slim\Controller\EventHandler;
 
 use \Slim\Http\Response;
 use \Slim\Http\Request;

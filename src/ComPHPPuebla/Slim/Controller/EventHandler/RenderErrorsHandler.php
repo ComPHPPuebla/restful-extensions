@@ -1,10 +1,11 @@
 <?php
-namespace ComPHPPuebla\Event;
+namespace ComPHPPuebla\Slim\Controller\EventHandler;
 
 use \Slim\Http\Response;
 use \Slim\Http\Request;
 use \Zend\EventManager\Event;
 use \Slim\View;
+use \ArrayObject;
 
 class RenderErrorsHandler
 {
@@ -37,10 +38,10 @@ class RenderErrorsHandler
     /**
      * @param array $errors
      */
-    public function renderErrors(array $errors, Response $response)
+    public function renderErrors(ArrayObject $errors, Response $response)
     {
         $viewExtension = $this->getViewExtension($response);
-        $this->view->setData(['errors' => ['messages' => $errors]]);
+        $this->view->setData(['errors' => ['messages' => $errors->getArrayCopy()]]);
 
         return $this->view->display("error/errors.$viewExtension.twig");
     }
