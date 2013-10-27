@@ -11,25 +11,28 @@ class HttpCacheMiddleware extends Middleware
      */
     protected $cache;
 
-	public function __construct(CacheProvider $cache)
-	{
-		$this->cache = $cache;
-	}
+    /**
+     * @param CacheProvider $cache
+     */
+    public function __construct(CacheProvider $cache)
+    {
+        $this->cache = $cache;
+    }
 
-	public function call()
-	{
-	    if (!in_array($this->app->request()->getMethod(), ['GET', 'HEAD'])) {
+    public function call()
+    {
+        if (!in_array($this->app->request()->getMethod(), ['GET', 'HEAD'])) {
 
-	        return $this->next->call();
-	    }
+            return $this->next->call();
+        }
 
-		$cacheKey = $this->app->request()->getPathInfo();
+        $cacheKey = $this->app->request()->getPathInfo();
 
-		if ($this->cache->contains($cacheKey)) {
-		    $resource = $this->cache->fetch($cacheKey);
-			$this->app->lastModified($resource['last_updated_at']);
-		}
+        if ($this->cache->contains($cacheKey)) {
+            $resource = $this->cache->fetch($cacheKey);
+            $this->app->lastModified($resource['last_updated_at']);
+        }
 
-		$this->next->call();
-	}
+        $this->next->call();
+    }
 }

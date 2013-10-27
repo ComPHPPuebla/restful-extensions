@@ -1,6 +1,8 @@
 <?php
 namespace ComPHPPuebla\Proxy;
 
+use ProxyManager\Configuration;
+
 use \PHPUnit_Framework_TestCase as TestCase;
 use \ComPHPPuebla\Proxy\CacheProxyFactory;
 use \ComPHPPuebla\Doctrine\TableGateway\UserTable;
@@ -40,7 +42,11 @@ class CacheProxyFactoryTest extends TestCase
               ->method('save')
               ->with('/users/1', $user);
 
-        $cacheProxy = new CacheProxyFactory($cache, '/users/1', __DIR__ . '/../../../cache');
+        $config = new Configuration();
+        $config->setProxiesTargetDir(__DIR__ . '/../../../cache');
+        spl_autoload_register($config->getProxyAutoloader());
+
+        $cacheProxy = new CacheProxyFactory($cache, '/users/1', $config);
 
         $userTable = $cacheProxy->createProxy($table, ['find']);
 
