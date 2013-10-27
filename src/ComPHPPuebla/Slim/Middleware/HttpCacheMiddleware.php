@@ -30,7 +30,8 @@ class HttpCacheMiddleware extends Middleware
 
         if ($this->cache->contains($cacheKey)) {
             $resource = $this->cache->fetch($cacheKey);
-            $this->app->lastModified($resource['last_updated_at']);
+            $lastModified = strtotime($resource['last_updated_at']);
+            $this->app->lastModified($lastModified);
         }
 
         $this->next->call();
