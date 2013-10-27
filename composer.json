@@ -23,7 +23,8 @@
         "twig/twig": "v1.14.0",
         "pagerfanta/pagerfanta": "v1.0.1",
         "zendframework/zend-eventmanager": "2.2.4",
-        "zircote/hal": "0.3.3"
+        "zircote/hal": "0.3.3",
+        "ocramius/proxy-manager": "0.4.1"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.27",

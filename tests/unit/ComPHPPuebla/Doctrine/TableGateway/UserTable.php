@@ -17,11 +17,14 @@ class UserTable extends Table
      */
     public function insert(array $values) {}
 
-    /**
-     * @param int
+	/**
+	 * @param int
      * @return array
-    */
-     public function find($id) {}
+     */
+    public function find($id)
+    {
+        return ['username' => 'luis', 'password' => 'changeme'];
+    }
 
     /**
      * @param array $values
