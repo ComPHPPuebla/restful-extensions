@@ -39,22 +39,29 @@ class CacheProxyFactory
      * @param Table $table
      * @param array $methods
      */
-    public function createProxy(Table $table, array $methods)
+    public function createProxy(Table $table)
     {
         $proxy = $this->factory->createProxy($table);
 
-        foreach ($methods as $method) {
-            $proxy->setMethodPrefixInterceptor($method, function($proxy, $instance, $method, $params, &$returnEarly) {
-                if ($this->cache->contains($this->cacheId)) {
-                    $returnEarly = true;
+        $proxy->setMethodPrefixInterceptor('find', function($proxy, $instance, $method, $params, &$returnEarly) {
+            if ($this->cache->contains($this->cacheId)) {
+                $returnEarly = true;
 
-                    return $this->cache->fetch($this->cacheId);
-                }
-            });
-            $proxy->setMethodSuffixInterceptor($method, function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
-                $this->cache->save($this->cacheId, $returnValue);
-            });
-		}
+                return $this->cache->fetch($this->cacheId);
+            }
+        });
+        $proxy->setMethodSuffixInterceptor('find', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
+            $this->cache->save($this->cacheId, $returnValue);
+        });
+
+        $proxy->setMethodSuffixInterceptor('update', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
+            $this->cache->save($this->cacheId, $returnValue);
+        });
+
+        $proxy->setMethodSuffixInterceptor('delete', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
+            $this->cache->delete($this->cacheId);
+        });
+
 
         return $proxy;
     }

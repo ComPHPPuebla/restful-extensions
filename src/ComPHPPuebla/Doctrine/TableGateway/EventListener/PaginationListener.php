@@ -1,10 +1,10 @@
 <?php
-namespace ComPHPPuebla\Doctrine\TableGateway\EventHandler;
+namespace ComPHPPuebla\Doctrine\TableGateway\EventListener;
 
 use \ComPHPPuebla\Paginator\PagerfantaPaginator;
 use \Zend\EventManager\Event;
 
-class PaginationHandler
+class PaginationListener
 {
     /**
      * @var PagerfantaPaginator

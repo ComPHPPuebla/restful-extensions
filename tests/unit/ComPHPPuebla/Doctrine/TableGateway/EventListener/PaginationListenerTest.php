@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Doctrine\TableGateway\EventHandler;
+namespace ComPHPPuebla\Doctrine\TableGateway\EventListener;
 
 use \Doctrine\DBAL\Driver\Statement;
 use \Zend\EventManager\EventManager;
@@ -9,7 +9,7 @@ use \ArrayIterator;
 
 abstract class MockStatement extends ArrayIterator implements Statement {}
 
-class PaginationHandlerTest extends TestCase
+class PaginationListenerTest extends TestCase
 {
     public function testCanCreatePaginator()
     {
@@ -24,7 +24,7 @@ class PaginationHandlerTest extends TestCase
                    ->setMethods(['execute'])
                    ->getMock();
 
-        $statement = $this->getMockBuilder('ComPHPPuebla\Doctrine\TableGateway\EventHandler\MockStatement')
+        $statement = $this->getMockBuilder('ComPHPPuebla\Doctrine\TableGateway\EventListener\MockStatement')
                           ->setMethods(['fetchAll'])
                           ->getMockForAbstractClass();
 
@@ -45,10 +45,10 @@ class PaginationHandlerTest extends TestCase
            ->method('execute')
            ->will($this->returnValue($statement));
 
-        $paginationHandler = new PaginationHandler($paginator);
+        $paginationListener = new PaginationListener($paginator);
 
         $eventManager = new EventManager();
-        $eventManager->attach('paginateQuery', $paginationHandler);
+        $eventManager->attach('paginateQuery', $paginationListener);
 
         $criteria = ['page' => 1];
 
