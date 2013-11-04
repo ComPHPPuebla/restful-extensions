@@ -1,6 +1,7 @@
 <?php
 namespace ComPHPPuebla\Hypermedia\Formatter\HAL;
 
+use \ComPHPPuebla\Paginator\Paginator;
 use \Slim\Views\TwigExtension;
 use \ArrayObject;
 use \IteratorAggregate;
@@ -31,16 +32,19 @@ class CollectionFormatter extends Formatter
      */
     public function format(IteratorAggregate $paginator, array $params)
     {
-        $halCollection = ['links' => []];
+        $isPaginator = $paginator instanceof Paginator;
 
-        $halCollection['links'] = $this->createPaginationLinks(
-            $paginator, $this->routeName, $params
-        );
+        $halCollection = ['links' => []];
+        if ($isPaginator) {
+            $halCollection['links'] = $this->createPaginationLinks(
+                $paginator, $this->routeName, $params
+            );
+        }
         $halCollection['links']['self'] = $this->buildUrl($this->routeName, $params);
 
         $embedded = [];
-        foreach ($paginator->getCurrentPageResults() as $resource) {
-
+        $items = $isPaginator ? $paginator->getCurrentPageResults() : $paginator->getArrayCopy();
+        foreach ($items as $resource) {
             $embedded[][$this->routeName] = $this->formatter->format(
                 new ArrayObject($resource), $params
             );
@@ -56,21 +60,17 @@ class CollectionFormatter extends Formatter
      * @param string   $routeName
      * @param array $params
      */
-    protected function createPaginationLinks(IteratorAggregate $paginator, $routeName, array $params)
+    protected function createPaginationLinks(Paginator $paginator, $routeName, array $params)
     {
-        if (!isset($params['page'])) {
-
-            return [];
-        }
-
         $paginator->setCurrentPage($params['page']);
 
         $links = [];
         if ($paginator->haveToPaginate()) {
 
-            $params['page'] = 1;
-            $links['first'] = $this->buildUrl($routeName, $params);
-
+            if (1 !== $paginator->getCurrentPage()) {
+                $params['page'] = 1;
+                $links['first'] = $this->buildUrl($routeName, $params);
+            }
             if ($paginator->hasNextPage()) {
                 $params['page'] = $paginator->getNextPage();
                 $links['next'] = $this->buildUrl($routeName, $params);
@@ -80,9 +80,10 @@ class CollectionFormatter extends Formatter
                 $params['page'] = $paginator->getPreviousPage();
                 $links['prev'] = $this->buildUrl($routeName, $params);
             }
-
-            $params['page'] = $paginator->getNbPages();
-            $links['last'] = $this->buildUrl($routeName, $params);
+            if ($paginator->getNbPages() !== $paginator->getCurrentPage()) {
+                $params['page'] = $paginator->getNbPages();
+                $links['last'] = $this->buildUrl($routeName, $params);
+            }
         }
 
         return $links;
@@ -97,6 +98,6 @@ class CollectionFormatter extends Formatter
     {
         $baseUrl = $this->urlHelper->site($this->urlHelper->urlFor($routeName));
 
-        return $baseUrl . '?' . http_build_query($params);
+        return trim($baseUrl . '?' . http_build_query($params), '?');
     }
 }

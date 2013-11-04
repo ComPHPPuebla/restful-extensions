@@ -39,20 +39,20 @@ abstract class Table
     }
 
     /**
+     * @param string $sql
+     * @param array $params
+     */
+    public function fetchAll($sql, array $params = [])
+    {
+        return $this->connection->fetchAll($sql, $params);
+    }
+
+    /**
      * @return Doctrine\DBAL\Query\QueryBuilder
      */
     protected function createQueryBuilder()
     {
         return $this->connection->createQueryBuilder();
-    }
-
-    /**
-     * @param string $sql
-     * @param array $params
-     */
-    protected function fetchAll($sql, array $params = [])
-    {
-        return $this->connection->fetchAll($sql, $params);
     }
 
     /**

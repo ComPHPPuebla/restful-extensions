@@ -14,6 +14,11 @@ interface Paginator
     public function setCurrentPage($currentPage);
 
     /**
+     * @return int
+     */
+    public function getCurrentPage();
+
+    /**
      * @return boolean
      */
     public function haveToPaginate();
@@ -24,9 +29,19 @@ interface Paginator
     public function hasNextPage();
 
     /**
+     * @return int
+     */
+    public function getNextPage();
+
+    /**
      * @return boolean
      */
     public function hasPreviousPage();
+
+    /**
+     * @return int
+     */
+    public function getPreviousPage();
 
     /**
      * @return int

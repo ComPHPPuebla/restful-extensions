@@ -1,12 +1,12 @@
 <?php
-namespace ComPHPPuebla\Proxy;
+namespace ComPHPPuebla\Doctrine\TableGateway;
 
-use \ComPHPPuebla\Doctrine\TableGateway\Table;
 use \Doctrine\Common\Cache\CacheProvider;
 use \ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
+use \ProxyManager\Proxy\AccessInterceptorInterface;
 use \ProxyManager\Configuration;
 
-class CacheProxyFactory
+class TableProxyFactory
 {
     /**
      * @var CacheProvider
@@ -24,24 +24,42 @@ class CacheProxyFactory
     protected $factory;
 
     /**
-     * @param CacheProvider $cache
-     * @param string $cacheId
-     * @param string $proxiesDir
+     * @var PaginatorFactory
      */
-    public function __construct(CacheProvider $cache, $cacheId, Configuration $configuration)
+    protected $paginatorFactory;
+
+    /**
+     * @param Configuration $configuration
+     */
+    public function __construct(Configuration $configuration)
     {
-        $this->cache = $cache;
-        $this->cacheId = $cacheId;
         $this->factory = new Factory($configuration);
     }
 
     /**
-     * @param Table $table
-     * @param array $methods
+     * @param AccessInterceptorInterface $proxy
+     * @param PaginatorFactory $paginatorFactory
+     * @return void
      */
-    public function createProxy(Table $table)
+    public function addPagination(AccessInterceptorInterface $proxy, PaginatorFactory $paginatorFactory)
     {
-        $proxy = $this->factory->createProxy($table);
+        $proxy->setMethodSuffixInterceptor('findAll', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) use ($paginatorFactory) {
+            $returnEarly = true;
+
+            return $paginatorFactory->createPaginator($returnValue, $params['criteria'], $instance);
+        });
+    }
+
+    /**
+     * @param AccessInterceptorInterface $proxy
+     * @param CacheProvider $cache
+     * @param string $cacheId
+     * @return void
+     */
+    public function addCaching(AccessInterceptorInterface $proxy, CacheProvider $cache, $cacheId)
+    {
+        $this->cache = $cache;
+        $this->cacheId = $cacheId;
 
         $proxy->setMethodPrefixInterceptor('find', function($proxy, $instance, $method, $params, &$returnEarly) {
             if ($this->cache->contains($this->cacheId)) {
@@ -61,8 +79,14 @@ class CacheProxyFactory
         $proxy->setMethodSuffixInterceptor('delete', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
             $this->cache->delete($this->cacheId);
         });
+    }
 
-
-        return $proxy;
+    /**
+     * @param Table $table
+     * @return AccessInterceptorInterface
+     */
+    public function createProxy(Table $table)
+    {
+        return $this->factory->createProxy($table);
     }
 }

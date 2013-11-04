@@ -50,6 +50,15 @@ class PagerfantaPaginator implements Paginator, IteratorAggregate
         $this->pagerfanta->setCurrentPage($currentPage);
     }
 
+	/**
+	 * @return int
+	 * @see \ComPHPPuebla\Paginator\Paginator::getCurrentPage()
+	 */
+	public function getCurrentPage()
+	{
+		return $this->pagerfanta->getCurrentPage();
+	}
+
     /**
      * @return boolean
      */

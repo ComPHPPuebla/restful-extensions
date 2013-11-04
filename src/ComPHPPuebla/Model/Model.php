@@ -44,7 +44,9 @@ class Model implements Validator
      */
     public function retrieveAll(array $criteria)
     {
-        return $this->table->findAll($criteria);
+        $resources = $this->table->findAll($criteria);
+
+        return is_array($resources) ? new ArrayObject($resources) : $resources;
     }
 
     /**

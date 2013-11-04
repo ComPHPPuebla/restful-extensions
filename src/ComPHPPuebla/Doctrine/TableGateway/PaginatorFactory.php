@@ -1,10 +1,11 @@
 <?php
-namespace ComPHPPuebla\Doctrine\TableGateway\EventListener;
+namespace ComPHPPuebla\Doctrine\TableGateway;
 
 use \ComPHPPuebla\Paginator\PagerfantaPaginator;
 use \Zend\EventManager\Event;
+use \Doctrine\DBAL\Query\QueryBuilder;
 
-class PaginationListener
+class PaginatorFactory
 {
     /**
      * @var PagerfantaPaginator
@@ -24,14 +25,11 @@ class PaginationListener
      * @param array $criteria
      * @return PagerfantaPaginator
      */
-    public function __invoke(Event $event)
+    public function createPaginator(QueryBuilder $qb, array $criteria, Table $table)
     {
-        $criteria = $event->getParam('criteria');
-        $qb = $event->getParam('qb');
-        $table = $event->getTarget();
-
         if (!isset($criteria['page'])) {
-            $criteria['page'] = 1;
+
+            return $table->fetchAll($qb->getSQL());
         }
 
         $this->paginator->initAdapter($qb, array($table, 'count'));
