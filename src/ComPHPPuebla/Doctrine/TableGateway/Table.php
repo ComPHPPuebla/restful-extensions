@@ -4,7 +4,6 @@ namespace ComPHPPuebla\Doctrine\TableGateway;
 use \ComPHPPuebla\Paginator\PagerfantaPaginator;
 use \Doctrine\DBAL\Query\QueryBuilder;
 use \Doctrine\DBAL\Connection;
-use \Zend\EventManager\EventManagerInterface;
 
 abstract class Table
 {
@@ -14,28 +13,11 @@ abstract class Table
     protected $connection;
 
     /**
-     * @var EventManagerInterface
-     */
-    protected $eventManager;
-
-    /**
      * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
-    }
-
-    /**
-     * @param EventManagerInterface $eventManager
-     */
-    public function setEventManager(EventManagerInterface $eventManager)
-    {
-        $eventManager->setIdentifiers([
-            __CLASS__,
-            get_called_class(),
-        ]);
-        $this->eventManager = $eventManager;
     }
 
     /**
