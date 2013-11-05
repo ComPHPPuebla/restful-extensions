@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Proxy;
+namespace ComPHPPuebla\Doctrine\TableGateway;
 
 use ProxyManager\Configuration;
 
@@ -7,7 +7,7 @@ use \PHPUnit_Framework_TestCase as TestCase;
 use \ComPHPPuebla\Proxy\CacheProxyFactory;
 use \ComPHPPuebla\Doctrine\TableGateway\UserTable;
 
-class CacheProxyFactoryTest extends TestCase
+class TableProxyFactoryTest extends TestCase
 {
     public function testCanCacheResults()
     {
@@ -43,12 +43,13 @@ class CacheProxyFactoryTest extends TestCase
               ->with('/users/1', $user);
 
         $config = new Configuration();
-        $config->setProxiesTargetDir(__DIR__ . '/../../../cache');
+        $config->setProxiesTargetDir(__DIR__ . '/../../../../cache');
         spl_autoload_register($config->getProxyAutoloader());
 
-        $cacheProxy = new CacheProxyFactory($cache, '/users/1', $config);
+        $factory = new TableProxyFactory($config);
 
-        $userTable = $cacheProxy->createProxy($table, ['find']);
+        $userTable = $factory->createProxy($table);
+        $factory->addCaching($userTable, $cache, '/users/1');
 
         $this->assertEquals($user, $userTable->find(1));
         $this->assertEquals($user, $userTable->find(1));

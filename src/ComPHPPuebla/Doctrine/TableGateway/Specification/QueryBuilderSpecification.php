@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Doctrine\Specification;
+namespace ComPHPPuebla\Doctrine\TableGateway\Specification;
 
 use \Doctrine\DBAL\Query\QueryBuilder;
 

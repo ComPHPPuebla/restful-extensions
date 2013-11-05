@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Doctrine\TableGateway\EventListener;
+namespace ComPHPPuebla\Doctrine\TableGateway;
 
 use \Doctrine\DBAL\Driver\Statement;
 use \Zend\EventManager\EventManager;
@@ -9,7 +9,7 @@ use \ArrayIterator;
 
 abstract class MockStatement extends ArrayIterator implements Statement {}
 
-class PaginationListenerTest extends TestCase
+class PaginatorFactoryTest extends TestCase
 {
     public function testCanCreatePaginator()
     {
@@ -24,7 +24,7 @@ class PaginationListenerTest extends TestCase
                    ->setMethods(['execute'])
                    ->getMock();
 
-        $statement = $this->getMockBuilder('ComPHPPuebla\Doctrine\TableGateway\EventListener\MockStatement')
+        $statement = $this->getMockBuilder('ComPHPPuebla\Doctrine\TableGateway\MockStatement')
                           ->setMethods(['fetchAll'])
                           ->getMockForAbstractClass();
 
@@ -45,18 +45,11 @@ class PaginationListenerTest extends TestCase
            ->method('execute')
            ->will($this->returnValue($statement));
 
-        $paginationListener = new PaginationListener($paginator);
-
-        $eventManager = new EventManager();
-        $eventManager->attach('paginateQuery', $paginationListener);
+        $paginatorFactory = new PaginatorFactory($paginator);
 
         $criteria = ['page' => 1];
 
-        $result = $eventManager->trigger('paginateQuery', $userTable, [
-            'qb' => $qb, 'criteria' => $criteria,
-        ]);
-
-        $paginator = $result->first();
+        $paginator = $paginatorFactory->createPaginator($qb, $criteria, $userTable);
 
         $this->assertInstanceOf('\ComPHPPuebla\Paginator\PagerfantaPaginator', $paginator);
         $this->assertEquals($expectedUsers, $paginator->getCurrentPageResults());
