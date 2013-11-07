@@ -32,6 +32,9 @@ class PagerfantaPaginator implements Paginator, IteratorAggregate
     public function setMaxPerPage($maxPerPage)
     {
         $this->maxPerPage = $maxPerPage;
+        if ($this->pagerfanta) {
+            $this->pagerfanta->setMaxPerPage($maxPerPage);
+        }
     }
 
     /**

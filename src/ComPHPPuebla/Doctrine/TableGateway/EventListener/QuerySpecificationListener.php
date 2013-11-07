@@ -2,7 +2,7 @@
 namespace ComPHPPuebla\Doctrine\TableGateway\EventListener;
 
 use \Zend\EventManager\Event;
-use \ComPHPPuebla\Doctrine\Specification\QueryBuilderSpecification;
+use \ComPHPPuebla\Doctrine\TableGateway\Specification\QueryBuilderSpecification;
 
 class QuerySpecificationListener
 {

@@ -34,14 +34,6 @@ class CollectionFormatter extends Formatter
     {
         $isPaginator = $paginator instanceof Paginator;
 
-        $halCollection = ['links' => []];
-        if ($isPaginator) {
-            $halCollection['links'] = $this->createPaginationLinks(
-                $paginator, $this->routeName, $params
-            );
-        }
-        $halCollection['links']['self'] = $this->buildUrl($this->routeName, $params);
-
         $embedded = [];
         $items = $isPaginator ? $paginator->getCurrentPageResults() : $paginator->getArrayCopy();
         foreach ($items as $resource) {
@@ -52,6 +44,14 @@ class CollectionFormatter extends Formatter
 
         $halCollection['embedded'] = $embedded;
         $halCollection['data'] = [];
+
+        $halCollection['links'] = [];
+        if ($isPaginator) {
+            $halCollection['links'] = $this->createPaginationLinks(
+                $paginator, $this->routeName, $params
+            );
+        }
+        $halCollection['links']['self'] = $this->buildUrl($this->routeName, $params);
 
         return $halCollection;
     }
