@@ -40,7 +40,7 @@ class RenderErrorsListener
      */
     public function renderErrors(array $errors, Response $response)
     {
-        $viewFormat = $this->getViewFormat$response);
+        $viewFormat = $this->getViewFormat($response);
         $this->view->setData(['errors' => ['messages' => $errors]]);
 
         return $this->view->display("error/errors.$viewFormat.twig");

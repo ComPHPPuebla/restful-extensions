@@ -41,7 +41,7 @@ class RestControllerProxyFactory extends SlimController
                 $returnEarly = true;
 
                 try {
-                    $resource = $instance->get();
+                    $resource = $instance->get($params['id']);
                     $this->triggerEvent('postDispatch', $instance, $resource);
                 } catch(ResourceNotFoundException $e) {
                     $instance->response()->status(404); //Not Found
@@ -75,7 +75,7 @@ class RestControllerProxyFactory extends SlimController
             function($proxy, $instance, $method, $params, &$returnEarly) {
                 $returnEarly = true;
                 try {
-                    $resource = $instance->put();
+                    $resource = $instance->put($params['id']);
                     $this->triggerEvent('postDispatch', $instance, $resource);
                 } catch(ResourceNotFoundException $e) {
                     $instance->response()->status(404); //Not Found
@@ -89,7 +89,7 @@ class RestControllerProxyFactory extends SlimController
             function($proxy, $instance, $method, $params, &$returnEarly) {
                 $returnEarly = true;
                 try {
-                    $instance->delete();
+                    $instance->delete($params['id']);
                 } catch(ResourceNotFoundException $e) {
                     $instance->response()->status(404); //Not Found
                 }
@@ -109,16 +109,16 @@ class RestControllerProxyFactory extends SlimController
     /**
      * @param string $eventName
      * @param RestController $controller
-     * @param array $resource
+     * @param array|Paginator $resource
      */
-    protected function triggerEvent($eventName, RestController $controller, array $resource)
+    protected function triggerEvent($eventName, RestController $controller, $resource)
     {
         $argv = [
             'resource' => $resource,
             'request' => $controller->request(),
             'response' => $controller->response(),
         ];
-        $this->eventManager->trigger($$eventName, $controller, $argv);
+        $this->eventManager->trigger($eventName, $controller, $argv);
     }
 
     /**

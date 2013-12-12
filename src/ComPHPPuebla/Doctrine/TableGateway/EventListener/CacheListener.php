@@ -44,6 +44,11 @@ class CacheListener extends AbstractListenerAggregate
      */
     public function preFind(EventInterface $event)
     {
+        if (!preg_match('/\d$/', $this->cacheId, $matches)) {
+
+            return; //The current route is a POST, do not cache new resources with this cache ID
+        }
+
         if ($this->cache->contains($this->cacheId)) {
             $event->stopPropagation(true);
 
@@ -56,6 +61,10 @@ class CacheListener extends AbstractListenerAggregate
      */
     public function postFind(EventInterface $event)
     {
+        if (!$event->getParam('row')) {
+
+            return; //No row was found
+        }
         $this->cache->save($this->cacheId, $event->getParam('row'));
     }
 

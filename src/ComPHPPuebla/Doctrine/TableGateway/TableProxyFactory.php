@@ -60,12 +60,6 @@ class TableProxyFactory
                 return $instance->insert($params['values']);
             }
         );
-        $proxy->setMethodSuffixInterceptor(
-            'insert',
-            function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
-                $this->eventManager->trigger('onSave', $instance, ['row' => $returnValue]);
-            }
-        );
         $proxy->setMethodPrefixInterceptor(
             'update',
             function($proxy, $instance, $method, $params, &$returnEarly) {
@@ -88,7 +82,7 @@ class TableProxyFactory
             }
         );
         $proxy->setMethodSuffixInterceptor(
-            'findAll',
+            'getQueryFindAll',
             function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
                 $this->eventManager->trigger(
                     'postFindAll', $instance, ['qb' => $returnValue, 'criteria' => $params['criteria']]
