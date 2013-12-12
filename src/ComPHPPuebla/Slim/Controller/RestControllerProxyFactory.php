@@ -66,7 +66,7 @@ class RestControllerProxyFactory extends SlimController
                     $this->triggerEvent('postDispatch', $instance, $resource);
 
                 } catch (BadRequestParameters $e) {
-                    $this->handleBadRequest();
+                    $this->handleBadRequest($instance);
                 }
             }
         );
@@ -102,7 +102,7 @@ class RestControllerProxyFactory extends SlimController
      */
     protected function handleBadRequest(RestController $controller)
     {
-        $controller->setStatus(400); //Bad request
+        $controller->response()->setStatus(400); //Bad request
         $this->triggerEvent('renderErrors', $controller, $controller->errors());
     }
 
