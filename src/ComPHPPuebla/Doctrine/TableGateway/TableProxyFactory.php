@@ -1,7 +1,6 @@
 <?php
 namespace ComPHPPuebla\Doctrine\TableGateway;
 
-use \Doctrine\Common\Cache\CacheProvider;
 use \ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
 use \ProxyManager\Proxy\AccessInterceptorInterface;
 use \ProxyManager\Configuration;
@@ -9,16 +8,6 @@ use \Zend\EventManager\EventManager;
 
 class TableProxyFactory
 {
-    /**
-     * @var CacheProvider
-     */
-    protected $cache;
-
-    /**
-     * @var string
-     */
-    protected $cacheId;
-
     /**
      * @var AccessInterceptorValueHolderFactory
      */
@@ -30,11 +19,6 @@ class TableProxyFactory
     protected $paginatorFactory;
 
     /**
-     * @var EventManager
-     */
-    protected $eventManager;
-
-    /**
      * @param Configuration $configuration
      */
     public function __construct(Configuration $configuration)
@@ -42,22 +26,76 @@ class TableProxyFactory
         $this->factory = new Factory($configuration);
     }
 
-    public function addEventManagement(AccessInterceptorInterface $proxy, EventManager $manager)
+    /**
+     * @param AccessInterceptorInterface $proxy
+     * @param EventManager $eventManager
+     */
+    public function addEventManagement(AccessInterceptorInterface $proxy, EventManager $eventManager)
     {
-        $this->eventManager = $manager;
+        $this->eventManager = $eventManager;
 
-        $proxy->setMethodPrefixInterceptor('insert', function($proxy, $instance, $method, $params, &$returnEarly) {
-            $returnEarly = true;
-            $this->eventManager->trigger('preInsert', $instance, ['values' => &$params['values']]);
+        $proxy->setMethodPrefixInterceptor(
+            'find',
+            function($proxy, $instance, $method, $params, &$returnEarly) {
+                $results = $this->eventManager->trigger('preFind', $instance);
 
-            return $instance->insert($params['values']);
-        });
-        $proxy->setMethodPrefixInterceptor('update', function($proxy, $instance, $method, $params, &$returnEarly) {
-            $returnEarly = true;
-            $this->eventManager->trigger('preUpdate', $instance, ['values' => &$params['values']]);
+                if ($results->stopped()) {
+                    $returnEarly = true;
 
-            return $instance->update($params['values'], $params['id']);
-        });
+                    return $results->last();
+                }
+            }
+        );
+        $proxy->setMethodSuffixInterceptor(
+            'find',
+            function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
+                $this->eventManager->trigger('postFind', $instance, ['row' => $returnValue]);
+            }
+        );
+        $proxy->setMethodPrefixInterceptor(
+            'insert',
+            function($proxy, $instance, $method, $params, &$returnEarly) {
+                $returnEarly = true;
+                $this->eventManager->trigger('preInsert', $instance, ['values' => &$params['values']]);
+
+                return $instance->insert($params['values']);
+            }
+        );
+        $proxy->setMethodSuffixInterceptor(
+            'insert',
+            function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
+                $this->eventManager->trigger('onSave', $instance, ['row' => $returnValue]);
+            }
+        );
+        $proxy->setMethodPrefixInterceptor(
+            'update',
+            function($proxy, $instance, $method, $params, &$returnEarly) {
+                $returnEarly = true;
+                $this->eventManager->trigger('preUpdate', $instance, ['values' => &$params['values']]);
+
+                return $instance->update($params['values'], $params['id']);
+            }
+        );
+        $proxy->setMethodSuffixInterceptor(
+            'update',
+            function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
+                $this->eventManager->trigger('onSave', $instance, ['row' => $returnValue]);
+            }
+        );
+        $proxy->setMethodSuffixInterceptor(
+            'delete',
+            function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
+                $this->eventManager->trigger('onDelete', $instance);
+            }
+        );
+        $proxy->setMethodSuffixInterceptor(
+            'findAll',
+            function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
+                $this->eventManager->trigger(
+                    'postFindAll', $instance, ['qb' => $returnValue, 'criteria' => $params['criteria']]
+                );
+            }
+        );
     }
 
     /**
@@ -70,44 +108,7 @@ class TableProxyFactory
         $proxy->setMethodSuffixInterceptor('findAll', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) use ($paginatorFactory) {
             $returnEarly = true;
 
-            if ($this->eventManager) {
-                $this->eventManager->trigger(
-                    'postFindAll', $instance, ['qb' => $returnValue, 'criteria' => $params['criteria']]
-                );
-            }
-
             return $paginatorFactory->createPaginator($returnValue, $params['criteria'], $instance);
-        });
-    }
-
-    /**
-     * @param AccessInterceptorInterface $proxy
-     * @param CacheProvider $cache
-     * @param string $cacheId
-     * @return void
-     */
-    public function addCaching(AccessInterceptorInterface $proxy, CacheProvider $cache, $cacheId)
-    {
-        $this->cache = $cache;
-        $this->cacheId = $cacheId;
-
-        $proxy->setMethodPrefixInterceptor('find', function($proxy, $instance, $method, $params, &$returnEarly) {
-            if ($this->cache->contains($this->cacheId)) {
-                $returnEarly = true;
-
-                return $this->cache->fetch($this->cacheId);
-            }
-        });
-        $proxy->setMethodSuffixInterceptor('find', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
-            $this->cache->save($this->cacheId, $returnValue);
-        });
-
-        $proxy->setMethodSuffixInterceptor('update', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
-            $this->cache->save($this->cacheId, $returnValue);
-        });
-
-        $proxy->setMethodSuffixInterceptor('delete', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) {
-            $this->cache->delete($this->cacheId);
         });
     }
 

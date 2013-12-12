@@ -6,12 +6,6 @@ use \Doctrine\DBAL\Query\QueryBuilder;
 class UserTable extends Table
 {
     /**
-     * @param array $criteria
-     * @return ComPHPPuebla\Paginator\Paginator
-     */
-    public function findAll(array $criteria) {}
-
-    /**
      * @param array $values
      * @return array
      */
@@ -30,17 +24,28 @@ class UserTable extends Table
      * @param array $values
      * @param int $id
      * @return array
-    */
-     public function update(array $values, $id) {}
+     */
+    public function update(array $values, $id) {}
 
     /**
      * @param int $id
      * @return void
-    */
-     public function delete($id) {}
+     */
+    public function delete($id) {}
 
     /**
-     * return int
-    */
-     public function count(QueryBuilder $qb) {}
+     * @param array $criteria
+     * @return QueryBuilder
+     */
+    protected function getQueryFindAll(array $criteria)
+    {
+    }
+
+    /**
+     * @param array $criteria
+     * @return QueryBuilder
+     */
+    protected function getQueryCount(array $criteria)
+    {
+    }
 }

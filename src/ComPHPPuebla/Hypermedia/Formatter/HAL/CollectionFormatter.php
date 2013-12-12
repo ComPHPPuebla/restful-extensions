@@ -3,8 +3,6 @@ namespace ComPHPPuebla\Hypermedia\Formatter\HAL;
 
 use \ComPHPPuebla\Paginator\Paginator;
 use \Slim\Views\TwigExtension;
-use \ArrayObject;
-use \IteratorAggregate;
 
 class CollectionFormatter extends Formatter
 {
@@ -25,32 +23,23 @@ class CollectionFormatter extends Formatter
     }
 
     /**
-     * @param int   $count
-     * @param array $collection
-     * @param array $params
-     * @param string $routeName
+     * @see \ComPHPPuebla\Hypermedia\Formatter\HAL\Formatter::format()
      */
-    public function format(IteratorAggregate $paginator, array $params)
+    public function format($paginator, array $params)
     {
-        $isPaginator = $paginator instanceof Paginator;
-
         $embedded = [];
-        $items = $isPaginator ? $paginator->getCurrentPageResults() : $paginator->getArrayCopy();
-        foreach ($items as $resource) {
-            $embedded[][$this->routeName] = $this->formatter->format(
-                new ArrayObject($resource), $params
-            );
+        $resources = $paginator->getCurrentPageResults();
+        foreach ($resources as $resource) {
+            $embedded[][$this->routeName] = $this->formatter->format($resource, $params);
         }
 
         $halCollection['embedded'] = $embedded;
         $halCollection['data'] = [];
 
         $halCollection['links'] = [];
-        if ($isPaginator) {
-            $halCollection['links'] = $this->createPaginationLinks(
-                $paginator, $this->routeName, $params
-            );
-        }
+        $halCollection['links'] = $this->createPaginationLinks(
+            $paginator, $this->routeName, $params
+        );
         $halCollection['links']['self'] = $this->buildUrl($this->routeName, $params);
 
         return $halCollection;
@@ -62,8 +51,6 @@ class CollectionFormatter extends Formatter
      */
     protected function createPaginationLinks(Paginator $paginator, $routeName, array $params)
     {
-        $paginator->setCurrentPage($params['page']);
-
         $links = [];
         if ($paginator->haveToPaginate()) {
 

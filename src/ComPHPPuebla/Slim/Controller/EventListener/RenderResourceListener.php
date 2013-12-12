@@ -1,13 +1,12 @@
 <?php
-namespace ComPHPPuebla\Slim\Controller\EventHandler;
+namespace ComPHPPuebla\Slim\Controller\EventListener;
 
 use \Slim\Http\Response;
 use \Slim\Http\Request;
 use \Zend\EventManager\Event;
 use \Slim\View;
-use \ArrayObject;
 
-class RenderErrorsHandler
+class RenderResourceListener
 {
     /**
      * @var View
@@ -32,25 +31,27 @@ class RenderErrorsHandler
         $resource = $event->getParam('resource');
         $response = $event->getParam('response');
 
-        $this->renderErrors($resource, $response);
+        $body = $this->renderView($resource, $response);
+        $response->setBody($body);
     }
 
     /**
-     * @param array $errors
+     * @param array $resource
+     * @return string
      */
-    public function renderErrors(ArrayObject $errors, Response $response)
+    public function renderView(array $resource, Response $response)
     {
-        $viewExtension = $this->getViewExtension($response);
-        $this->view->setData(['errors' => ['messages' => $errors->getArrayCopy()]]);
+        $viewFormat = $this->getViewFormat($response);
+        $this->view->setData(['resource' => $resource]);
 
-        return $this->view->display("error/errors.$viewExtension.twig");
+        return $this->view->display("resource/show.$viewFormat.twig");
     }
 
     /**
      * @param Response $response
      * @return string
      */
-    protected function getViewExtension(Response $response)
+    protected function getViewFormat(Response $response)
     {
         $typeParts = explode('/', $response->headers->get('Content-Type'));
 

@@ -1,11 +1,10 @@
 <?php
-namespace ComPHPPuebla\Slim\Controller\EventHandler;
+namespace ComPHPPuebla\Slim\Controller\EventListener;
 
-use \Zend\EventManager\Event;
+use \Zend\EventManager\EventInterface;
 use \ComPHPPuebla\Hypermedia\Formatter\HAL\Formatter;
-use \ArrayObject;
 
-class FormatResourceHandler
+class FormatResourceListener
 {
     /**
      * @var Formatter
@@ -25,7 +24,7 @@ class FormatResourceHandler
      * @param Request $request
      * @param Response $response
      */
-    public function __invoke(Event $event)
+    public function __invoke(EventInterface $event)
     {
         $resource = $event->getParam('resource');
         $request = $event->getParam('request');

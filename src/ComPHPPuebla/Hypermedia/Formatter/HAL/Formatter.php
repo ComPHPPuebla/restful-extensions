@@ -26,7 +26,8 @@ abstract class Formatter
     }
 
     /**
-     * @param array $values
+     * @param array $resources
+     * @param array | Paginator $params
      */
-    abstract public function format(IteratorAggregate $resources, array $params);
+    abstract public function format($resources, array $params);
 }

@@ -1,5 +1,5 @@
 <?php
-namespace ComPHPPuebla\Slim\Controller\EventHandler;
+namespace ComPHPPuebla\Slim\Controller\EventListener;
 
 use \Zend\EventManager\Event;
 use \Zend\EventManager\EventManager;
@@ -37,7 +37,7 @@ class FormatResourceHandlerTest extends TestCase
                   ->method('format')
                   ->will($this->returnValue($user));
 
-        $resourceFormatterHandler = new FormatResourceHandler($formatter);
+        $resourceFormatterHandler = new FormatResourceListener($formatter);
 
         $eventManager = new EventManager();
         $eventManager->attach('formatResource', $resourceFormatterHandler);

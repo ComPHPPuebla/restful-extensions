@@ -3,7 +3,7 @@ namespace ComPHPPuebla\Model;
 
 use \ComPHPPuebla\Validator\Validator;
 use \ComPHPPuebla\Doctrine\TableGateway\Table;
-use \ArrayObject;
+use \ComPHPPuebla\Paginator\PaginatorFactory;
 
 class Model implements Validator
 {
@@ -18,9 +18,9 @@ class Model implements Validator
     protected $options;
 
     /**
-     * @var repository
+     * @var Table
      */
-    protected $repository;
+    protected $table;
 
     /**
      * @var Validator
@@ -28,42 +28,52 @@ class Model implements Validator
     protected $validator;
 
     /**
-     * @param Table $table
+     * @var PaginatorFactory
      */
-    public function __construct(Table $table, Validator $validator)
+    protected $paginatorFactory;
+
+    /**
+     * @param Table $table
+     * @param Validator $validator
+     * @param PaginatorFactory $paginatorFactory
+     * @param array $options
+     * @param array $optionsList
+     */
+    public function __construct(
+        Table $table,
+        Validator $validator,
+        PaginatorFactory $paginatorFactory,
+        array $options = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
+        array $optionsList = ['GET', 'POST', 'OPTIONS']
+    )
     {
         $this->table = $table;
         $this->validator = $validator;
-        $this->optionsList = ['GET', 'POST', 'OPTIONS'];
-        $this->options = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'];
+        $this->paginatorFactory = $paginatorFactory;
+        $this->options = $options;
+        $this->optionsList = $optionsList;
     }
 
     /**
      * @param array $criteria
-     * @param ResourceCollection $resources
+     * @return Paginator
      */
     public function retrieveAll(array $criteria)
     {
-        $resources = $this->table->findAll($criteria);
-
-        return is_array($resources) ? new ArrayObject($resources) : $resources;
+        return $this->paginatorFactory->createPaginator($criteria, $this->table);
     }
 
     /**
      * @param int $id
-     * @param Resource $resource
      * @return array
      */
     public function retrieveOne($id)
     {
-        $resource = $this->table->find($id);
-
-        return is_array($resource) ? new ArrayObject($resource) : $resource;
+        return $this->table->find($id);
     }
 
     /**
      * @param array $newResource
-     * @param Resource $resource
      * @return array
      */
     public function create(array $newResource)
@@ -80,7 +90,7 @@ class Model implements Validator
      */
     public function update(array $resourceValues, $id)
     {
-        return new ArrayObject($this->table->update($resourceValues, $id));
+        return $this->table->update($resourceValues, $id);
     }
 
     /**
@@ -105,7 +115,7 @@ class Model implements Validator
      */
     public function errors()
     {
-        return new ArrayObject($this->validator->errors());
+        return $this->validator->errors();
     }
 
     /**

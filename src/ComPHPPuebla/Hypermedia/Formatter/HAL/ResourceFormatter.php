@@ -21,11 +21,11 @@ class ResourceFormatter extends Formatter
     }
 
     /**
-     * @param array $resources
+     * @param array $resource
      * @param array $params
      * @return array
      */
-    public function format(IteratorAggregate $resource, array $params)
+    public function format($resource, array $params)
     {
         $halResource = ['links' => []];
 
@@ -33,7 +33,7 @@ class ResourceFormatter extends Formatter
             $this->urlHelper->urlFor($this->routeName, ['id' => $resource[$this->resourceKeyId]])
         );
 
-        $halResource['data'] = $resource->getIterator()->getArrayCopy();
+        $halResource['data'] = $resource;
 
         return $halResource;
     }

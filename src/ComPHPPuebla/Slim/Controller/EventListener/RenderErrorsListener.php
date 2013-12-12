@@ -1,12 +1,13 @@
 <?php
-namespace ComPHPPuebla\Slim\Controller\EventHandler;
+namespace ComPHPPuebla\Slim\Controller\EventListener;
 
 use \Slim\Http\Response;
 use \Slim\Http\Request;
-use \Zend\EventManager\Event;
+use \Zend\EventManager\EventInterface;
 use \Slim\View;
+use \ArrayObject;
 
-class RenderResourceHandler
+class RenderErrorsListener
 {
     /**
      * @var View
@@ -26,32 +27,30 @@ class RenderResourceHandler
      * @param Request $request
      * @param Response $response
      */
-    public function __invoke(Event $event)
+    public function __invoke(EventInterface $event)
     {
         $resource = $event->getParam('resource');
         $response = $event->getParam('response');
 
-        $body = $this->renderView($resource, $response);
-        $response->setBody($body);
+        $this->renderErrors($resource, $response);
     }
 
     /**
-     * @param array $resource
-     * @return string
+     * @param array $errors
      */
-    public function renderView(array $resource, Response $response)
+    public function renderErrors(array $errors, Response $response)
     {
-        $viewExtension = $this->getViewExtension($response);
-        $this->view->setData(['resource' => $resource]);
+        $viewFormat = $this->getViewFormat$response);
+        $this->view->setData(['errors' => ['messages' => $errors]]);
 
-        return $this->view->display("resource/show.$viewExtension.twig");
+        return $this->view->display("error/errors.$viewFormat.twig");
     }
 
     /**
      * @param Response $response
      * @return string
      */
-    protected function getViewExtension(Response $response)
+    protected function getViewFormat(Response $response)
     {
         $typeParts = explode('/', $response->headers->get('Content-Type'));
 

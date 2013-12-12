@@ -1,7 +1,6 @@
 <?php
 namespace ComPHPPuebla\Doctrine\TableGateway;
 
-use \ComPHPPuebla\Paginator\PagerfantaPaginator;
 use \Doctrine\DBAL\Query\QueryBuilder;
 use \Doctrine\DBAL\Connection;
 
@@ -13,10 +12,17 @@ abstract class Table
     protected $connection;
 
     /**
+     * @var string
+     */
+    protected $tableName;
+
+    /**
+     * @param string $tableName
      * @param Connection $connection
      */
-    public function __construct(Connection $connection)
+    public function __construct($tableName, Connection $connection)
     {
+        $this->tableName = $tableName;
         $this->connection = $connection;
     }
 
@@ -24,7 +30,7 @@ abstract class Table
      * @param string $sql
      * @param array $params
      */
-    public function fetchAll($sql, array $params = [])
+    protected function fetchAll($sql, array $params = [])
     {
         return $this->connection->fetchAll($sql, $params);
     }
@@ -58,41 +64,66 @@ abstract class Table
     }
 
     /**
-     * @param string $tableName
      * @param array $values
-     * @return int
+     * @return int The value of the last inserted ID
      */
-    protected function doInsert($tableName, array $values)
+    protected function doInsert(array $values)
     {
-        $this->connection->insert($tableName, $values);
+        $this->connection->insert($this->tableName, $values);
 
         return $this->connection->lastInsertId();
     }
 
     /**
-     * @param string $tableName
      * @param array $values
      * @param array $identifier
      */
-    protected function doUpdate($tableName, array $values, array $identifier)
+    protected function doUpdate(array $values, array $identifier)
     {
-        $this->connection->update($tableName, $values, $identifier);
+        $this->connection->update($this->tableName, $values, $identifier);
     }
 
     /**
-     * @param string $tableName
      * @param array $identifier
      */
-    protected function doDelete($tableName, array $identifier)
+    protected function doDelete(array $identifier)
     {
-        $this->connection->delete($tableName, $identifier);
+        $this->connection->delete($this->tableName, $identifier);
     }
 
     /**
      * @param array $criteria
-     * @return ComPHPPuebla\Paginator\Paginator
+     * @return array
      */
-    abstract public function findAll(array $criteria);
+    public function findAll(array $criteria)
+    {
+        $qb = $this->getQueryFindAll($criteria);
+
+        return $this->connection->fetchAll($qb->getSQL(), $qb->getParameters());
+    }
+
+    /**
+     * @param array $criteria
+     * return int
+     */
+    public function count(array $criteria)
+    {
+        $qb = $this->getQueryCount($criteria);
+
+        return $this->connection->fetchColumn($qb->getSQL(), $qb->getParameters());
+    }
+
+    /**
+     * @param array $criteria
+     * @return QueryBuilder
+     */
+    abstract protected function getQueryFindAll(array $criteria);
+
+    /**
+     * @param array $criteria
+     * @return QueryBuilder
+     */
+    abstract protected function getQueryCount(array $criteria);
 
     /**
      * @param array $values
@@ -118,9 +149,4 @@ abstract class Table
      * @return void
      */
     abstract public function delete($id);
-
-    /**
-     * return int
-     */
-    abstract public function count(QueryBuilder $qb);
 }
