@@ -1,10 +1,10 @@
 <?php
 namespace ComPHPPuebla\Doctrine\TableGateway;
 
-use \ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
+use \ProxyManager\Factory\AccessInterceptorValueHolderFactory;
 use \ProxyManager\Proxy\AccessInterceptorInterface;
 use \ProxyManager\Configuration;
-use \Zend\EventManager\EventManager;
+use \Zend\EventManager\EventManagerInterface;
 
 class TableProxyFactory
 {
@@ -14,26 +14,25 @@ class TableProxyFactory
     protected $factory;
 
     /**
-     * @var PaginatorFactory
+     * @var EventManagerInterface
      */
-    protected $paginatorFactory;
+    protected $eventManager;
 
     /**
      * @param Configuration $configuration
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(Configuration $configuration, EventManagerInterface $eventManager)
     {
-        $this->factory = new Factory($configuration);
+        $this->factory = new AccessInterceptorValueHolderFactory($configuration);
+        $this->eventManager = $eventManager;
     }
 
     /**
      * @param AccessInterceptorInterface $proxy
      * @param EventManager $eventManager
      */
-    public function addEventManagement(AccessInterceptorInterface $proxy, EventManager $eventManager)
+    public function addEventManagement(AccessInterceptorInterface $proxy)
     {
-        $this->eventManager = $eventManager;
-
         $proxy->setMethodPrefixInterceptor(
             'find',
             function($proxy, $instance, $method, $params, &$returnEarly) {
@@ -96,20 +95,6 @@ class TableProxyFactory
                 );
             }
         );
-    }
-
-    /**
-     * @param AccessInterceptorInterface $proxy
-     * @param PaginatorFactory $paginatorFactory
-     * @return void
-     */
-    public function addPagination(AccessInterceptorInterface $proxy, PaginatorFactory $paginatorFactory)
-    {
-        $proxy->setMethodSuffixInterceptor('findAll', function($proxy, $instance, $method, $params, $returnValue, &$returnEarly) use ($paginatorFactory) {
-            $returnEarly = true;
-
-            return $paginatorFactory->createPaginator($returnValue, $params['criteria'], $instance);
-        });
     }
 
     /**

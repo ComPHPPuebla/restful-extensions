@@ -51,12 +51,12 @@ class TableProxyFactoryTest extends TestCase
         $config->setProxiesTargetDir(__DIR__ . '/../../../../cache');
         spl_autoload_register($config->getProxyAutoloader());
 
-        $factory = new TableProxyFactory($config);
-
-        $userTable = $factory->createProxy(new UserTable('user', $this->connection));
         $eventManager = new EventManager();
         $eventManager->attachAggregate(new CacheListener($this->cache, '/users/1'));
-        $factory->addEventManagement($userTable, $eventManager);
+        $factory = new TableProxyFactory($config, $eventManager);
+
+        $userTable = $factory->createProxy(new UserTable('user', $this->connection));
+        $factory->addEventManagement($userTable);
 
         $this->assertEquals($this->user, $userTable->find(1));
         $this->assertEquals($this->user, $userTable->find(1));

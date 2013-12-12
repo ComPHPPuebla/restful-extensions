@@ -25,4 +25,20 @@ abstract class SlimController
         $this->request = $request;
         $this->response = $response;
     }
+
+    /**
+     * @return \Slim\Http\Request
+     */
+    public function request()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return \Slim\Http\Response
+     */
+    public function response()
+    {
+        return $this->response;
+    }
 }
