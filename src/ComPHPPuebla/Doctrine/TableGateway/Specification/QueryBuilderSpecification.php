@@ -8,7 +8,7 @@ abstract class QueryBuilderSpecification
     /**
      * @var array
      */
-    private $criteria;
+    protected $criteria;
 
     /**
      * @param array $criteria

@@ -19,9 +19,9 @@ class ChainedSpecification extends QueryBuilderSpecification
     }
 
     /**
-     * @param Specification $specification
+     * @param QueryBuilderSpecification $specification
      */
-    public function addSpecification(Specification $specification)
+    public function addSpecification(QueryBuilderSpecification $specification)
     {
         $this->specifications[] = $specification;
     }
