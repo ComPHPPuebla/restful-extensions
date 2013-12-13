@@ -28,8 +28,8 @@ class PaginatorFactory
     }
 
     /**
-     * @param QueryBuilder $qb
-     * @param array $criteria
+     * @param  QueryBuilder        $qb
+     * @param  array               $criteria
      * @return PagerfantaPaginator
      */
     public function createPaginator(array $criteria, Table $table)

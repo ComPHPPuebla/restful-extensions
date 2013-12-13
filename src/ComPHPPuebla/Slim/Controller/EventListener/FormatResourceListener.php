@@ -21,8 +21,8 @@ class FormatResourceListener
 
     /**
      * @param array|null $resource
-     * @param Request $request
-     * @param Response $response
+     * @param Request    $request
+     * @param Response   $response
      */
     public function __invoke(EventInterface $event)
     {

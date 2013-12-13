@@ -17,7 +17,7 @@ abstract class SlimController
     protected $response;
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      */
     public function __construct(Request $request, Response $response)

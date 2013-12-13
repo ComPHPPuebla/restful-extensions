@@ -16,15 +16,15 @@ class HasTimestampListener extends AbstractListenerAggregate
 
     public function onInsert(EventInterface $event)
     {
-    	$values = $event->getParam('values');
+        $values = $event->getParam('values');
 
-    	$now = new DateTime();
-    	$now = $now->format('Y-m-d h:i:s');
+        $now = new DateTime();
+        $now = $now->format('Y-m-d h:i:s');
 
-    	$values['created_at'] = $now;
-    	$values['last_updated_at'] = $now;
+        $values['created_at'] = $now;
+        $values['last_updated_at'] = $now;
 
-    	$event->setParam('values', $values);
+        $event->setParam('values', $values);
     }
 
     public function onUpdate(EventInterface $event)

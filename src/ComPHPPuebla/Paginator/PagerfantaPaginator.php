@@ -51,14 +51,14 @@ class PagerfantaPaginator implements Paginator
         $this->pagerfanta->setCurrentPage($currentPage);
     }
 
-	/**
-	 * @return int
-	 * @see \ComPHPPuebla\Paginator\Paginator::getCurrentPage()
-	 */
-	public function getCurrentPage()
-	{
-		return $this->pagerfanta->getCurrentPage();
-	}
+    /**
+     * @return int
+     * @see \ComPHPPuebla\Paginator\Paginator::getCurrentPage()
+     */
+    public function getCurrentPage()
+    {
+        return $this->pagerfanta->getCurrentPage();
+    }
 
     /**
      * @return boolean
@@ -110,7 +110,7 @@ class PagerfantaPaginator implements Paginator
 
     /**
      * @param QueryBuilder $qb
-     * @param callable $countModifier
+     * @param callable     $countModifier
      */
     public function init(AdapterInterface $adapter)
     {

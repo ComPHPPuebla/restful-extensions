@@ -25,7 +25,6 @@ class JsonpMiddleware extends Middleware
         $this->next->call();
 
         if (empty($callback)) {
-
             return; //Not a JSONP request
         }
 

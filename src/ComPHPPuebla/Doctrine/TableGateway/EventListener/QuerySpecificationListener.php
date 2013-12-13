@@ -13,7 +13,7 @@ class QuerySpecificationListener
 
     /**
      * @param QueryBuilderSpecification $specification
-     * @param array $criteria
+     * @param array                     $criteria
      */
     public function __construct(QueryBuilderSpecification $specification)
     {
@@ -22,7 +22,7 @@ class QuerySpecificationListener
 
     /**
      * @param QueryBuilder $qb
-     * @param array $criteria
+     * @param array        $criteria
      */
     public function __invoke(Event $event)
     {

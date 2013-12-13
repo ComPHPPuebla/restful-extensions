@@ -23,8 +23,8 @@ class RenderResourceListener
 
     /**
      * @param array|null $resource
-     * @param Request $request
-     * @param Response $response
+     * @param Request    $request
+     * @param Response   $response
      */
     public function __invoke(Event $event)
     {
@@ -36,7 +36,7 @@ class RenderResourceListener
     }
 
     /**
-     * @param array $resource
+     * @param  array  $resource
      * @return string
      */
     public function renderView(array $resource, Response $response)
@@ -48,7 +48,7 @@ class RenderResourceListener
     }
 
     /**
-     * @param Response $response
+     * @param  Response $response
      * @return string
      */
     protected function getViewFormat(Response $response)

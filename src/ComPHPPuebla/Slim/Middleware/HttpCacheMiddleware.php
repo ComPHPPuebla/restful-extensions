@@ -22,7 +22,6 @@ class HttpCacheMiddleware extends Middleware
     public function call()
     {
         if (!in_array($this->app->request()->getMethod(), ['GET', 'HEAD'])) {
-
             return $this->next->call();
         }
 

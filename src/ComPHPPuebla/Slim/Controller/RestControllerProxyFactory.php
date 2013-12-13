@@ -31,7 +31,7 @@ class RestControllerProxyFactory extends SlimController
 
     /**
      * @param AccessInterceptorInterface $proxy
-     * @param EventManager $eventManager
+     * @param EventManager               $eventManager
      */
     public function addEventManagement(AccessInterceptorInterface $proxy)
     {
@@ -43,7 +43,7 @@ class RestControllerProxyFactory extends SlimController
                 try {
                     $resource = $instance->get($params['id']);
                     $this->triggerEvent('postDispatch', $instance, $resource);
-                } catch(ResourceNotFoundException $e) {
+                } catch (ResourceNotFoundException $e) {
                     $instance->response()->status(404); //Not Found
                 }
             }
@@ -77,7 +77,7 @@ class RestControllerProxyFactory extends SlimController
                 try {
                     $resource = $instance->put($params['id']);
                     $this->triggerEvent('postDispatch', $instance, $resource);
-                } catch(ResourceNotFoundException $e) {
+                } catch (ResourceNotFoundException $e) {
                     $instance->response()->status(404); //Not Found
                 } catch (BadRequestParameters $e) {
                     $this->handleBadRequest($instance);
@@ -90,7 +90,7 @@ class RestControllerProxyFactory extends SlimController
                 $returnEarly = true;
                 try {
                     $instance->delete($params['id']);
-                } catch(ResourceNotFoundException $e) {
+                } catch (ResourceNotFoundException $e) {
                     $instance->response()->status(404); //Not Found
                 }
             }
@@ -107,8 +107,8 @@ class RestControllerProxyFactory extends SlimController
     }
 
     /**
-     * @param string $eventName
-     * @param RestController $controller
+     * @param string          $eventName
+     * @param RestController  $controller
      * @param array|Paginator $resource
      */
     protected function triggerEvent($eventName, RestController $controller, $resource)
@@ -122,7 +122,7 @@ class RestControllerProxyFactory extends SlimController
     }
 
     /**
-     * @param Table $table
+     * @param  Table                      $table
      * @return AccessInterceptorInterface
      */
     public function createProxy(RestController $controller)

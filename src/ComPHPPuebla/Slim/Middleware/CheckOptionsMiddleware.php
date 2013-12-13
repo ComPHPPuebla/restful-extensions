@@ -3,7 +3,6 @@ namespace ComPHPPuebla\Slim\Middleware;
 
 use \ComPHPPuebla\Model\Model;
 use \Slim\Middleware;
-use \InvalidArgumentException;
 
 class CheckOptionsMiddleware extends Middleware
 {

@@ -12,8 +12,8 @@ class CollectionFormatter extends Formatter
     protected $formatter;
 
     /**
-     * @param TwigExtension $urlHelper
-     * @param string $routeName
+     * @param TwigExtension     $urlHelper
+     * @param string            $routeName
      * @param ResourceFormatter $formatter
      */
     public function __construct(TwigExtension $urlHelper, $routeName, ResourceFormatter $formatter)
@@ -46,8 +46,8 @@ class CollectionFormatter extends Formatter
     }
 
     /**
-     * @param string   $routeName
-     * @param array $params
+     * @param string $routeName
+     * @param array  $params
      */
     protected function createPaginationLinks(Paginator $paginator, $routeName, array $params)
     {
@@ -77,8 +77,8 @@ class CollectionFormatter extends Formatter
     }
 
     /**
-     * @param string $routeName
-     * @param array $params
+     * @param  string $routeName
+     * @param  array  $params
      * @return string
      */
     protected function buildUrl($routeName, array $params)

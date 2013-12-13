@@ -28,7 +28,7 @@ class HalRendererExtension extends TwigExtension
     }
 
     /**
-     * @param  array         $resourceInfo
+     * @param  array    $resourceInfo
      * @return Resource
      */
     public function process(array $resourceInfo)
@@ -56,7 +56,7 @@ class HalRendererExtension extends TwigExtension
     }
 
     /**
-     * @param array $resource
+     * @param  array  $resource
      * @return string
      */
     public function renderJson(array $resource)
@@ -67,7 +67,7 @@ class HalRendererExtension extends TwigExtension
     }
 
     /**
-     * @param array $resource
+     * @param  array  $resource
      * @return string
      */
     public function renderXml(array $resource)

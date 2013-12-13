@@ -5,7 +5,6 @@ use \Slim\Http\Response;
 use \Slim\Http\Request;
 use \Zend\EventManager\EventInterface;
 use \Slim\View;
-use \ArrayObject;
 
 class RenderErrorsListener
 {
@@ -24,8 +23,8 @@ class RenderErrorsListener
 
     /**
      * @param array|null $resource
-     * @param Request $request
-     * @param Response $response
+     * @param Request    $request
+     * @param Response   $response
      */
     public function __invoke(EventInterface $event)
     {
@@ -47,7 +46,7 @@ class RenderErrorsListener
     }
 
     /**
-     * @param Response $response
+     * @param  Response $response
      * @return string
      */
     protected function getViewFormat(Response $response)

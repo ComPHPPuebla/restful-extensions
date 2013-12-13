@@ -17,7 +17,7 @@ abstract class Table
     protected $tableName;
 
     /**
-     * @param string $tableName
+     * @param string     $tableName
      * @param Connection $connection
      */
     public function __construct($tableName, Connection $connection)
@@ -28,7 +28,7 @@ abstract class Table
 
     /**
      * @param string $sql
-     * @param array $params
+     * @param array  $params
      */
     protected function fetchAll($sql, array $params = [])
     {
@@ -44,8 +44,8 @@ abstract class Table
     }
 
     /**
-     * @param string $sql
-     * @param array $params
+     * @param  string $sql
+     * @param  array  $params
      * @return array
      */
     protected function fetchAssoc($sql, array $params = [])
@@ -54,8 +54,8 @@ abstract class Table
     }
 
     /**
-     * @param string $sql
-     * @param array $params
+     * @param  string $sql
+     * @param  array  $params
      * @return array
      */
     protected function fetchColumn($sql, array $params = [])
@@ -64,10 +64,10 @@ abstract class Table
     }
 
     /**
-     * @param array $values
-     * @return int The value of the last inserted ID
+     * @param  array $values
+     * @return int   The value of the last inserted ID
      */
-    protected function doInsert(array $values)
+    protected function insert(array $values)
     {
         $this->connection->insert($this->tableName, $values);
 
@@ -92,7 +92,7 @@ abstract class Table
     }
 
     /**
-     * @param array $criteria
+     * @param  array $criteria
      * @return array
      */
     public function findAll(array $criteria)
@@ -114,22 +114,16 @@ abstract class Table
     }
 
     /**
-     * @param array $criteria
+     * @param  array        $criteria
      * @return QueryBuilder
      */
     abstract protected function getQueryFindAll(array $criteria);
 
     /**
-     * @param array $criteria
+     * @param  array        $criteria
      * @return QueryBuilder
      */
     abstract protected function getQueryCount(array $criteria);
-
-    /**
-     * @param array $values
-     * @return array
-     */
-    abstract public function insert(array $values);
 
     /**
      * @param int
@@ -138,14 +132,14 @@ abstract class Table
     abstract public function find($id);
 
     /**
-     * @param array $values
-     * @param int $id
+     * @param  array $values
+     * @param  int   $id
      * @return array
      */
     abstract public function update(array $values, $id);
 
     /**
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     abstract public function delete($id);

@@ -21,7 +21,7 @@ class RestController extends SlimController
     }
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return array
      */
     public function get($id)
@@ -51,8 +51,8 @@ class RestController extends SlimController
     }
 
     /**
-     * @param int $id
-     * @param Resource $resource
+     * @param  int      $id
+     * @param  Resource $resource
      * @return array
      */
     public function put($id)
@@ -70,7 +70,7 @@ class RestController extends SlimController
      */
     public function delete($id)
     {
-        $resource = $this->findById($id);
+        $this->findById($id);
         $this->model->delete($id);
         $this->response->status(204); //No Content
     }
@@ -100,21 +100,20 @@ class RestController extends SlimController
     }
 
     /**
-     * @param int $id
+     * @param  int                       $id
      * @return array
      * @throws ResourceNotFoundException
      */
     protected function findById($id)
     {
         if ($resource = $this->model->retrieveOne($id)) {
-
             return $resource;
         }
         throw new ResourceNotFoundException("Resource with ID: $id, cannot be found");
     }
 
     /**
-     * @param array $values
+     * @param  array   $values
      * @return boolean
      */
     protected function validate(array $values)

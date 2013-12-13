@@ -2,7 +2,6 @@
 namespace ComPHPPuebla\Hypermedia\Formatter\HAL;
 
 use \Slim\Views\TwigExtension;
-use \IteratorAggregate;
 
 class ResourceFormatter extends Formatter
 {
@@ -21,8 +20,8 @@ class ResourceFormatter extends Formatter
     }
 
     /**
-     * @param array $resource
-     * @param array $params
+     * @param  array $resource
+     * @param  array $params
      * @return array
      */
     public function format($resource, array $params)

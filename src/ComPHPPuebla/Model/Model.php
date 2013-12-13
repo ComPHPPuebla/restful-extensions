@@ -33,11 +33,11 @@ class Model implements Validator
     protected $paginatorFactory;
 
     /**
-     * @param Table $table
-     * @param Validator $validator
+     * @param Table            $table
+     * @param Validator        $validator
      * @param PaginatorFactory $paginatorFactory
-     * @param array $options
-     * @param array $optionsList
+     * @param array            $options
+     * @param array            $optionsList
      */
     public function __construct(
         Table $table,
@@ -55,7 +55,7 @@ class Model implements Validator
     }
 
     /**
-     * @param array $criteria
+     * @param  array     $criteria
      * @return Paginator
      */
     public function retrieveAll(array $criteria)
@@ -64,7 +64,7 @@ class Model implements Validator
     }
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return array
      */
     public function retrieveOne($id)
@@ -73,7 +73,7 @@ class Model implements Validator
     }
 
     /**
-     * @param array $newResource
+     * @param  array $newResource
      * @return array
      */
     public function create(array $newResource)
@@ -84,8 +84,8 @@ class Model implements Validator
     }
 
     /**
-     * @param array $resourceValues
-     * @param int $id
+     * @param  array $resourceValues
+     * @param  int   $id
      * @return array
      */
     public function update(array $resourceValues, $id)
@@ -102,7 +102,7 @@ class Model implements Validator
     }
 
     /**
-     * @param array $values
+     * @param  array   $values
      * @return boolean
      */
     public function isValid(array $values)

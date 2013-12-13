@@ -29,7 +29,7 @@ class TableProxyFactory
 
     /**
      * @param AccessInterceptorInterface $proxy
-     * @param EventManager $eventManager
+     * @param EventManager               $eventManager
      */
     public function addEventManagement(AccessInterceptorInterface $proxy)
     {
@@ -92,7 +92,7 @@ class TableProxyFactory
     }
 
     /**
-     * @param Table $table
+     * @param  Table                      $table
      * @return AccessInterceptorInterface
      */
     public function createProxy(Table $table)

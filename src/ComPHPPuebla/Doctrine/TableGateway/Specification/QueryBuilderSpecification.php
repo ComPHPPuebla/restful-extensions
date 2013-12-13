@@ -19,7 +19,7 @@ abstract class QueryBuilderSpecification
     }
 
     /**
-     * @param string $key
+     * @param  string  $key
      * @return boolean
      */
     public function has($key)
@@ -28,7 +28,7 @@ abstract class QueryBuilderSpecification
     }
 
     /**
-     * @param string $key
+     * @param  string $key
      * @return mixed
      */
     public function get($key)

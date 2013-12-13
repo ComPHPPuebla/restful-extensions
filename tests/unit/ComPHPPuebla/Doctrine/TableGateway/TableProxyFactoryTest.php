@@ -3,26 +3,25 @@ namespace ComPHPPuebla\Doctrine\TableGateway;
 
 use \ProxyManager\Configuration;
 use \PHPUnit_Framework_TestCase as TestCase;
+use \ProxyManager\Proxy\AccessInterceptorInterface\ProxyManager\Proxy\ValueHolderInterface;
 use \ComPHPPuebla\Doctrine\TableGateway\UserTable;
-use \Zend\EventManager\EventManager;
-use \ComPHPPuebla\Doctrine\TableGateway\EventListener\CacheListener;
 
 class TableProxyFactoryTest extends TestCase
 {
     /**
-     * @var ArrayCache
+     * @var \Zend\EventManager\EventManager
      */
-    protected $cache;
+    protected $manager;
 
     /**
-     * @var array
+     * @var \ComPHPPuebla\Doctrine\TableGateway\UserTable
      */
-    protected $user;
+    protected $table;
 
     /**
-     * @var Connection
+     * @var \ProxyManager\Proxy\AccessInterceptorInterface
      */
-    protected $connection;
+    protected $proxy;
 
     /**
      * Initialize mocked dependencies
@@ -31,65 +30,43 @@ class TableProxyFactoryTest extends TestCase
      */
     protected function setUp()
     {
-        $this->cache = $this->getMockBuilder('\Doctrine\Common\Cache\ArrayCache')
-                            ->setMethods(['contains', 'fetch', 'save'])
-                            ->getMock();
-        $this->user = ['username' => 'luis', 'password' => 'changeme'];
-        $this->connection = $this->getMockBuilder('\Doctrine\DBAL\Connection')
-                                 ->disableOriginalConstructor()
-                                ->getMock();
+        $this->manager = $this->getMockBuilder('\Zend\EventManager\EventManager')->getMock();
+        $connection = $this->getMockBuilder('\Doctrine\DBAL\Connection')
+                           ->disableOriginalConstructor()
+                           ->getMock();
+        $this->table = new UserTable('user', $connection);
+        $this->proxy = $this->getMockBuilder('\ProxyManager\Proxy\AccessInterceptorInterface')
+                            ->disableOriginalConstructor()
+                            ->getMock(['setMethodPrefixInterceptor', 'setMethodSuffixInterceptor']);
     }
 
-    public function testCanCacheResults()
+    public function testProxyIsInitializedCorrectly()
     {
-        $this->expectsThatCacheIsInitiallyEmpty();
-        $this->expectsThatCacheContainsKey('/users/1');
-        $this->expectsThatCacheCanFetchValueWithKey('/users/1');
-        $this->expectsThatCacheCanSaveItemWithKey('/users/1');
-
         $config = new Configuration();
-        $config->setProxiesTargetDir(__DIR__ . '/../../../../cache');
         spl_autoload_register($config->getProxyAutoloader());
 
-        $eventManager = new EventManager();
-        $eventManager->attachAggregate(new CacheListener($this->cache, '/users/1'));
-        $factory = new TableProxyFactory($config, $eventManager);
+        $factory = new TableProxyFactory($config, $this->manager);
 
-        $userTable = $factory->createProxy(new UserTable('user', $this->connection));
-        $factory->addEventManagement($userTable);
+        $this->assertInstanceOf(
+            '\ProxyManager\Proxy\AccessInterceptorInterface',
+            $factory->createProxy($this->table)
+        );
 
-        $this->assertEquals($this->user, $userTable->find(1));
-        $this->assertEquals($this->user, $userTable->find(1));
+        $this->expectsThatProxyInitializes3PrefixInterceptors();
+        $this->expectsThatProxyInitializes4SuffixInterceptors();
+
+        $factory->addEventManagement($this->proxy);
     }
 
-    protected function expectsThatCacheIsInitiallyEmpty()
+    protected function expectsThatProxyInitializes3PrefixInterceptors()
     {
-        $this->cache->expects($this->at(0))
-                    ->method('contains')
-                    ->with('/users/1')
-                    ->will($this->returnValue(false));
+        $this->proxy->expects($this->exactly(3))
+                    ->method('setMethodPrefixInterceptor');
     }
 
-    protected function expectsThatCacheContainsKey($key)
+    protected function expectsThatProxyInitializes4SuffixInterceptors()
     {
-        $this->cache->expects($this->at(2))
-                    ->method('contains')
-                    ->with($key)
-                    ->will($this->returnValue(true));
-    }
-
-    protected function expectsThatCacheCanFetchValueWithKey($key)
-    {
-        $this->cache->expects($this->once())
-                    ->method('fetch')
-                    ->with()
-                    ->will($this->returnValue($this->user));
-    }
-
-    protected function expectsThatCacheCanSaveItemWithKey($key)
-    {
-        $this->cache->expects($this->once())
-                    ->method('save')
-                    ->with($key, $this->user);
+        $this->proxy->expects($this->exactly(4))
+                    ->method('setMethodSuffixInterceptor');
     }
 }

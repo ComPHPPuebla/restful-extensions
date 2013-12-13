@@ -5,12 +5,6 @@ use \Doctrine\DBAL\Query\QueryBuilder;
 
 class UserTable extends Table
 {
-    /**
-     * @param array $values
-     * @return array
-     */
-    public function insert(array $values) {}
-
 	/**
 	 * @param int
      * @return array
@@ -37,15 +31,11 @@ class UserTable extends Table
      * @param array $criteria
      * @return QueryBuilder
      */
-    protected function getQueryFindAll(array $criteria)
-    {
-    }
+    protected function getQueryFindAll(array $criteria) {}
 
     /**
      * @param array $criteria
      * @return QueryBuilder
      */
-    protected function getQueryCount(array $criteria)
-    {
-    }
+    protected function getQueryCount(array $criteria) {}
 }
