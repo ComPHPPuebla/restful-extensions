@@ -1,8 +1,8 @@
 <?php
 namespace ComPHPPuebla\Doctrine\TableGateway\EventListener;
 
-use \Zend\EventManager\Event;
 use \ComPHPPuebla\Doctrine\TableGateway\Specification\QueryBuilderSpecification;
+use \Zend\EventManager\EventInterface;
 
 class QuerySpecificationListener
 {
@@ -21,10 +21,9 @@ class QuerySpecificationListener
     }
 
     /**
-     * @param QueryBuilder $qb
-     * @param array        $criteria
+     * @param EventInterface $event
      */
-    public function __invoke(Event $event)
+    public function __invoke(EventInterface $event)
     {
         $this->specification->setCriteria($event->getParam('criteria'));
         $this->specification->match($event->getParam('qb'));

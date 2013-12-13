@@ -8,12 +8,20 @@ use \DateTime;
 
 class HasTimestampListener extends AbstractListenerAggregate
 {
+    /**
+     * @see \Zend\EventManager\ListenerAggregateInterface::attach()
+     */
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach('preInsert', array($this, 'onInsert'));
         $this->listeners[] = $events->attach('preUpdate', array($this, 'onUpdate'));
     }
 
+    /**
+     * Add current `DateTime` value for fields `created_at` and `last_updated_at`
+     *
+     * @param EventInterface $event
+     */
     public function onInsert(EventInterface $event)
     {
         $values = $event->getParam('values');
@@ -27,6 +35,11 @@ class HasTimestampListener extends AbstractListenerAggregate
         $event->setParam('values', $values);
     }
 
+    /**
+     * Add current `DateTime` value for field `last_updated_at`
+     *
+     * @param EventInterface $event
+     */
     public function onUpdate(EventInterface $event)
     {
         $values = $event->getParam('values');
