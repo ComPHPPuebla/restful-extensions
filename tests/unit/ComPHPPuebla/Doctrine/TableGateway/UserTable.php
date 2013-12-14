@@ -5,8 +5,8 @@ use \Doctrine\DBAL\Query\QueryBuilder;
 
 class UserTable extends Table
 {
-	/**
-	 * @param int
+    /**
+     * @param int
      * @return array
      */
     public function find($id)
@@ -15,26 +15,26 @@ class UserTable extends Table
     }
 
     /**
-     * @param array $values
-     * @param int $id
+     * @param  array $values
+     * @param  int   $id
      * @return array
      */
     public function update(array $values, $id) {}
 
     /**
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id) {}
 
     /**
-     * @param array $criteria
+     * @param  array        $criteria
      * @return QueryBuilder
      */
     protected function getQueryFindAll(array $criteria) {}
 
     /**
-     * @param array $criteria
+     * @param  array        $criteria
      * @return QueryBuilder
      */
     protected function getQueryCount(array $criteria) {}

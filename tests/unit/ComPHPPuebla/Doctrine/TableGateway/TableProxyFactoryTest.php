@@ -3,7 +3,6 @@ namespace ComPHPPuebla\Doctrine\TableGateway;
 
 use \ProxyManager\Configuration;
 use \PHPUnit_Framework_TestCase as TestCase;
-use \ProxyManager\Proxy\AccessInterceptorInterface\ProxyManager\Proxy\ValueHolderInterface;
 use \ComPHPPuebla\Doctrine\TableGateway\UserTable;
 
 class TableProxyFactoryTest extends TestCase

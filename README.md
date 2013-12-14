@@ -1,4 +1,3 @@
-restful-extensions
-==================
+# Restful extensions
 
-Extensions to create a RESTful API
+Extensions to create RESTful APIs

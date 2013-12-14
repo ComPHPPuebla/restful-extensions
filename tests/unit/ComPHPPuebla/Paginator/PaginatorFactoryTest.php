@@ -1,10 +1,7 @@
 <?php
 namespace ComPHPPuebla\Paginator;
 
-use \Doctrine\DBAL\Driver\Statement;
-use \Zend\EventManager\EventManager;
 use \PHPUnit_Framework_TestCase as TestCase;
-use \ArrayIterator;
 
 class PaginatorFactoryTest extends TestCase
 {
