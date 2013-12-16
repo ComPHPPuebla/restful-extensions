@@ -64,17 +64,6 @@ abstract class Table
     }
 
     /**
-     * @param  array $values
-     * @return int   The value of the last inserted ID
-     */
-    protected function insert(array $values)
-    {
-        $this->connection->insert($this->tableName, $values);
-
-        return $this->connection->lastInsertId();
-    }
-
-    /**
      * @param array $values
      * @param array $identifier
      */
@@ -111,6 +100,17 @@ abstract class Table
         $qb = $this->getQueryCount($criteria);
 
         return $this->connection->fetchColumn($qb->getSQL(), $qb->getParameters());
+    }
+
+    /**
+     * @param  array $values
+     * @return int   The value of the last inserted ID
+     */
+    public function insert(array $values)
+    {
+        $this->connection->insert($this->tableName, $values);
+
+        return $this->connection->lastInsertId();
     }
 
     /**
