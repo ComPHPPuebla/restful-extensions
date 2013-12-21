@@ -80,6 +80,11 @@ class PaginatorFactory
         }
 
         $page = isset($criteria['page']) ? $criteria['page'] : 1;
+
+        if ($page > $this->paginator->getNbPages()) {
+            throw new PageOutOfRangeException("Page $page does not exists.");
+        }
+
         $this->paginator->setCurrentPage($page);
     }
 }

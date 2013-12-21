@@ -7,6 +7,7 @@ use \ProxyManager\Configuration;
 use \Zend\EventManager\EventManagerInterface;
 use \ComPHPPuebla\Slim\Controller\Exception\ResourceNotFoundException;
 use \ComPHPPuebla\Slim\Controller\Exception\BadRequestParameters;
+use \ComPHPPuebla\Paginator\PageOutOfRangeException;
 
 class RestControllerProxyFactory extends SlimController
 {
@@ -52,9 +53,12 @@ class RestControllerProxyFactory extends SlimController
             'getList',
             function($proxy, $instance, $method, $params, &$returnEarly) {
                 $returnEarly = true;
-
-                $resources = $instance->getList();
-                $this->triggerEvent('postDispatch', $instance, $resources);
+                try {
+                    $resources = $instance->getList();
+                    $this->triggerEvent('postDispatch', $instance, $resources);
+                } catch (PageOutOfRangeException $e) {
+                    $instance->response()->status(404); //Not Found
+                }
             }
         );
         $proxy->setMethodPrefixInterceptor(
