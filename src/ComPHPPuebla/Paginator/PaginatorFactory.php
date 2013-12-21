@@ -2,10 +2,10 @@
 namespace ComPHPPuebla\Paginator;
 
 use \ComPHPPuebla\Paginator\PagerfantaPaginator;
-use \Doctrine\DBAL\Query\QueryBuilder;
-use \Pagerfanta\Adapter\FixedAdapter;
 use \ComPHPPuebla\Doctrine\TableGateway\Table;
-use Pagerfanta\Adapter\AdapterInterface;
+use \Doctrine\DBAL\Query\QueryBuilder;
+use \Pagerfanta\Adapter\AdapterInterface;
+use \Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 class PaginatorFactory
 {
@@ -34,24 +34,37 @@ class PaginatorFactory
      */
     public function createPaginator(array $criteria, Table $table)
     {
-        $nbResults = $table->count($criteria);
-        $results = $table->findAll($criteria);
+        $adapter = $this->getAdapter($table->getQueryFindAll($criteria), $table, $criteria);
 
-        $this->paginator->init($this->getAdapter($nbResults, $results));
+        $this->paginator->init($adapter);
         $this->setupPaginator($criteria);
 
         return $this->paginator;
     }
 
+    /**
+     * @param AdapterInterface $adapter
+     */
     public function setAdapter(AdapterInterface $adapter)
     {
         $this->adapter = $adapter;
     }
 
-    protected function getAdapter($nbResults, $results)
+    /**
+     * @param  QueryBuilder     $queryBuilder
+     * @param  Table            $table
+     * @param  array            $criteria
+     * @return AdapterInterface
+     */
+    protected function getAdapter(QueryBuilder $queryBuilder, Table $table, array $criteria)
     {
         if (!$this->adapter) {
-            $this->adapter = new FixedAdapter($nbResults, $results);
+            $this->adapter = new DoctrineDbalAdapter(
+                $queryBuilder,
+                function($queryBuilder) use ($table, $criteria) {
+                    return $table->getQueryCount($criteria);
+                }
+            );
         }
 
         return $this->adapter;
@@ -62,12 +75,11 @@ class PaginatorFactory
      */
     protected function setupPaginator(array $criteria)
     {
-        $page = isset($criteria['page']) ? $criteria['page'] : 1;
-        $this->paginator->setCurrentPage($page);
-
         if (isset($criteria['page_size'])) {
-
             $this->paginator->setMaxPerPage($criteria['page_size']);
         }
+
+        $page = isset($criteria['page']) ? $criteria['page'] : 1;
+        $this->paginator->setCurrentPage($page);
     }
 }
