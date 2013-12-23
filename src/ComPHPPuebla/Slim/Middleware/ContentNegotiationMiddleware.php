@@ -35,9 +35,8 @@ class ContentNegotiationMiddleware extends Middleware
 
         $negotiator = new Negotiator();
         $format = $negotiator->getBest($this->app->request()->headers('Accept'));
-        $type = $format->getValue();
 
-        if (in_array($type, $this->validContentTypes)) {
+        if ($format && in_array(($type = $format->getValue()), $this->validContentTypes)) {
 
             $this->app->contentType($type);
             $this->next->call();
