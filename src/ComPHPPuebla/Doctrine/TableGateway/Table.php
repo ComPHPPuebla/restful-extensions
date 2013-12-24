@@ -81,28 +81,6 @@ abstract class Table
     }
 
     /**
-     * @param  array $criteria
-     * @return array
-     */
-    public function findAll(array $criteria)
-    {
-        $qb = $this->getQueryFindAll($criteria);
-
-        return $this->connection->fetchAll($qb->getSQL(), $qb->getParameters());
-    }
-
-    /**
-     * @param array $criteria
-     * return int
-     */
-    public function count(array $criteria)
-    {
-        $qb = $this->getQueryCount($criteria);
-
-        return $this->connection->fetchColumn($qb->getSQL(), $qb->getParameters());
-    }
-
-    /**
      * @param  array $values
      * @return int   The value of the last inserted ID
      */
@@ -117,13 +95,13 @@ abstract class Table
      * @param  array        $criteria
      * @return QueryBuilder
      */
-    abstract protected function getQueryFindAll(array $criteria);
+    abstract public function getQueryFindAll(array $criteria);
 
     /**
      * @param  array        $criteria
      * @return QueryBuilder
      */
-    abstract protected function getQueryCount(array $criteria);
+    abstract public function getQueryCount(array $criteria);
 
     /**
      * @param int
