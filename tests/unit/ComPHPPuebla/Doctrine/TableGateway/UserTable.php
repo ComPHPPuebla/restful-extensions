@@ -31,11 +31,11 @@ class UserTable extends Table
      * @param  array        $criteria
      * @return QueryBuilder
      */
-    protected function getQueryFindAll(array $criteria) {}
+    public function getQueryFindAll(array $criteria) {}
 
     /**
      * @param  array        $criteria
      * @return QueryBuilder
      */
-    protected function getQueryCount(array $criteria) {}
+    public function getQueryCount(array $criteria) {}
 }

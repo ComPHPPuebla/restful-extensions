@@ -14,7 +14,7 @@ class PaginatorFactoryTest extends TestCase
             ['username' => 'misraim', 'password' => 'letmein'],
         ];
 
-        $adapter = $this->getMockBuilder('\Pagerfanta\Adapter\FixedAdapter')
+        $adapter = $this->getMockBuilder('\Pagerfanta\Adapter\DoctrineDbalAdapter')
                         ->disableOriginalConstructor()
                         ->getMock();
 
@@ -29,6 +29,14 @@ class PaginatorFactoryTest extends TestCase
         $userTable = $this->getMockBuilder('\ComPHPPuebla\Doctrine\TableGateway\UserTable')
                           ->disableOriginalConstructor()
                           ->getMock();
+
+        $qb = $this->getMockBuilder('\Doctrine\DBAL\Query\QueryBuilder')
+                   ->disableOriginalConstructor()
+                   ->getMock();
+
+        $userTable->expects($this->once())
+                  ->method('getQueryFindAll')
+                  ->will($this->returnValue($qb));
 
         $paginatorFactory = new PaginatorFactory($paginator);
         $paginatorFactory->setAdapter($adapter);
