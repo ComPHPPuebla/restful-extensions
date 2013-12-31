@@ -1,4 +1,4 @@
-# Working with resources
+# Working with pagination
 
 This classes purpose is to paginate resource collections in RESTful APIs.
 
@@ -19,15 +19,15 @@ $paginator = $factory->createPaginator(['page' => 1, 'page_size' => 2], $userTab
 
 if ($paginator->haveToPaginate()) {
     echo 'Showing page ', $paginator->getCurrentPage(), ' of ', $paginator->getNbPages(), "\n";
-    
+
     if ($paginator->hasPreviousPage()) {
         echo 'Previous ', $paginator->getPreviousPage(), "\n";
     }
-    
+
     if ($paginator->hasNextPage()) {
         echo 'Next ', $paginator->getNextPage(), "\n";
     }
-    
+
     foreach ($paginator->getCurrentPageResults() as $user) {
         echo $user['username'];
     }
