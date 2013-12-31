@@ -38,7 +38,7 @@ class PaginatorFactoryTest extends TestCase
                   ->method('getQueryFindAll')
                   ->will($this->returnValue($qb));
 
-        $paginatorFactory = new PaginatorFactory($paginator);
+        $paginatorFactory = new PagerfantaPaginatorFactory($paginator);
         $paginatorFactory->setAdapter($adapter);
 
         $criteria = ['page' => 1];
