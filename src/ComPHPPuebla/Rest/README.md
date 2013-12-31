@@ -26,7 +26,7 @@ foreach ($users->getCurrentPageResults() as $user) {
 }
 ```
 
-Here's an example to retrieve a single resource by ID. The default implementation for Table is
+Here's an example to retrieve a single resource by ID. The default implementation for `Table` is
 using Doctrine DBAL but you could switch to another implementation.
 
 ```php
@@ -132,6 +132,6 @@ $usersOptions = new ResourceOptions(
     $collectionOptions = ['GET', 'POST', 'OPTIONS']
 );
 
-echo "{$usersOptions->getOptions()}\n";
-echo "{$usersOptions->getCollectionOptions()}\n";
+echo implode(', ', $usersOptions->getOptions()), "\n";
+echo implode(', ', $usersOptions->getCollectionOptions()), "\n";
 ```

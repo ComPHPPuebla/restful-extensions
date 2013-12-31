@@ -20,10 +20,7 @@ class Resource implements Validator
      * @param Table     $table
      * @param Validator $validator
      */
-    public function __construct(
-        Table $table,
-        Validator $validator = null
-    )
+    public function __construct(Table $table, Validator $validator = null)
     {
         $this->table = $table;
         $this->validator = $validator;
