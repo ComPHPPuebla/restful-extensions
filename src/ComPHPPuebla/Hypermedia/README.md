@@ -32,7 +32,7 @@ $halCollection = $collectionFormatter->format($paginator, $queryStringParams);
 
 var_dump($halCollection);
 /*
- * [links => [/* Set of links (paginated) */], 'embedded' => [/* Collection of resources */]]
+ * [links => ..., 'embedded' => ...]
  */
 ```
 
@@ -48,10 +48,10 @@ $formatter = new ResourceFormatter($urlHelper, 'users', 'user_id');
 $collectionFormatter = CollectionFormatter($urlHelper, $formatter);
 $resource = ['username' => 'montealegreluis', 'password' => 'letmein'];
 
-$halCollection = $collectionFormatter->format($resource, $queryStringParams);
+$halResource = $formatter->format($resource, $queryStringParams);
 
-var_dump($halCollection);
+var_dump($halResource);
 /*
- * [links => [/* Link to self resource */], 'username' => 'montealegreluis',  /* ... */]
+ * [links => ..., 'username' => 'montealegreluis', ...]
  */
 ```
