@@ -2,7 +2,7 @@
 namespace ComPHPPuebla\Slim\Controller\EventListener;
 
 use \Zend\EventManager\EventInterface;
-use \ComPHPPuebla\Hypermedia\Formatter\HAL\Formatter;
+use \ComPHPPuebla\Hypermedia\Formatter\Formatter;
 
 class FormatResourceListener
 {

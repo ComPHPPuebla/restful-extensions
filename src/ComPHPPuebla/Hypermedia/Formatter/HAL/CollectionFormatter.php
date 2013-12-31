@@ -4,7 +4,7 @@ namespace ComPHPPuebla\Hypermedia\Formatter\HAL;
 use \ComPHPPuebla\Paginator\Paginator;
 use \Slim\Views\TwigExtension;
 
-class CollectionFormatter extends Formatter
+class CollectionFormatter extends HALFormatter
 {
     /**
      * @var ResourceFormatter
@@ -13,12 +13,11 @@ class CollectionFormatter extends Formatter
 
     /**
      * @param TwigExtension     $urlHelper
-     * @param string            $routeName
      * @param ResourceFormatter $formatter
      */
-    public function __construct(TwigExtension $urlHelper, $routeName, ResourceFormatter $formatter)
+    public function __construct(TwigExtension $urlHelper, ResourceFormatter $formatter)
     {
-        parent::__construct($urlHelper, $routeName);
+        $this->urlHelper = $urlHelper;
         $this->formatter = $formatter;
     }
 
@@ -27,20 +26,19 @@ class CollectionFormatter extends Formatter
      */
     public function format($paginator, array $params)
     {
+        $routeName = $this->formatter->getRouteName();
         $embedded = [];
         $resources = $paginator->getCurrentPageResults();
         foreach ($resources as $resource) {
-            $embedded[][$this->routeName] = $this->formatter->format($resource, $params);
+            $embedded[][$routeName] = $this->formatter->format($resource, $params);
         }
 
         $halCollection['embedded'] = $embedded;
         $halCollection['data'] = [];
 
         $halCollection['links'] = [];
-        $halCollection['links'] = $this->createPaginationLinks(
-            $paginator, $this->routeName, $params
-        );
-        $halCollection['links']['self'] = $this->buildUrl($this->routeName, $params);
+        $halCollection['links'] = $this->createPaginationLinks($paginator, $routeName, $params);
+        $halCollection['links']['self'] = $this->buildUrl($routeName, $params);
 
         return $halCollection;
     }

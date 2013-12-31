@@ -3,7 +3,7 @@ namespace ComPHPPuebla\Hypermedia\Formatter\HAL;
 
 use \Slim\Views\TwigExtension;
 
-class ResourceFormatter extends Formatter
+class ResourceFormatter extends HALFormatter
 {
     /**
      * @var string
@@ -15,7 +15,8 @@ class ResourceFormatter extends Formatter
      */
     public function __construct(TwigExtension $urlHelper, $routeName, $resourceKeyId)
     {
-        parent::__construct($urlHelper, $routeName);
+        $this->urlHelper = $urlHelper;
+        $this->routeName = $routeName;
         $this->resourceKeyId = $resourceKeyId;
     }
 
@@ -35,5 +36,13 @@ class ResourceFormatter extends Formatter
         $halResource['data'] = $resource;
 
         return $halResource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteName()
+    {
+        return $this->routeName;
     }
 }

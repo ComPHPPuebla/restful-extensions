@@ -37,7 +37,7 @@ class CollectionFormatterTest extends TestCase
                                 ->getMock();
         $this->formatter = $this->getMockBuilder('\ComPHPPuebla\Hypermedia\Formatter\HAL\ResourceFormatter')
                                 ->setMethods(['format'])
-                                ->setConstructorArgs([$this->urlHelper, 'user', 'user_id'])
+                                ->setConstructorArgs([$this->urlHelper, 'users', 'user_id'])
                                 ->getMock();
     }
 
@@ -48,7 +48,7 @@ class CollectionFormatterTest extends TestCase
         $this->expectsThatFirstUserGetsFormatted();
         $this->expectsThatSecondUserGetsFormatted();
 
-        $collectionFormatter = new CollectionFormatter($this->urlHelper, 'users', $this->formatter);
+        $collectionFormatter = new CollectionFormatter($this->urlHelper, $this->formatter);
 
         $resources = $collectionFormatter->format($this->paginator, ['page' => 1]);
 
