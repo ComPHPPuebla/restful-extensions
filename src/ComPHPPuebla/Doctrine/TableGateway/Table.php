@@ -98,10 +98,9 @@ abstract class Table
     abstract public function getQueryFindAll(array $criteria);
 
     /**
-     * @param  array        $criteria
-     * @return QueryBuilder
+     * @param  QueryBuilder $qb
      */
-    abstract public function getQueryCount(array $criteria);
+    abstract public function modifyQueryCount(QueryBuilder $qb);
 
     /**
      * @param int

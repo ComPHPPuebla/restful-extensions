@@ -34,8 +34,7 @@ class UserTable extends Table
     public function getQueryFindAll(array $criteria) {}
 
     /**
-     * @param  array        $criteria
-     * @return QueryBuilder
+     * @param QueryBuilder $qb
      */
-    public function getQueryCount(array $criteria) {}
+    public function modifyQueryCount(QueryBuilder $qb) {}
 }

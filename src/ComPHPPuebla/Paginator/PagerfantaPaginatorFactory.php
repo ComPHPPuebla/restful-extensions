@@ -34,7 +34,7 @@ class PagerfantaPaginatorFactory
      */
     public function createPaginator(array $criteria, Table $table)
     {
-        $adapter = $this->getAdapter($table->getQueryFindAll($criteria), $table, $criteria);
+        $adapter = $this->getAdapter($table->getQueryFindAll($criteria), $table);
 
         $this->paginator->init($adapter);
         $this->setupPaginator($criteria);
@@ -56,13 +56,13 @@ class PagerfantaPaginatorFactory
      * @param  array            $criteria
      * @return AdapterInterface
      */
-    protected function getAdapter(QueryBuilder $queryBuilder, Table $table, array $criteria)
+    protected function getAdapter(QueryBuilder $queryBuilder, Table $table)
     {
         if (!$this->adapter) {
             $this->adapter = new DoctrineDbalAdapter(
                 $queryBuilder,
-                function($queryBuilder) use ($table, $criteria) {
-                    return $table->getQueryCount($criteria);
+                function($queryBuilder) use ($table) {
+                    $table->modifyQueryCount($queryBuilder);
                 }
             );
         }
