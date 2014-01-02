@@ -1,6 +1,6 @@
 # Working with HAL hypermedia formatting
 
-This classes purpose is to give HAL hypermedia format to resources in RESTful APIs.
+This classes purpose is to add HAL hypermedia information to resources in RESTful APIs.
 
 HAL, as defined by its specification is "... A simple format that gives a consistent and easy way
 to hyperlink between resources in your API". The default implementation for hypermedia formatting is

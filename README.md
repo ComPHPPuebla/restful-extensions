@@ -22,7 +22,8 @@ You can also check the documentation of individual packages.
 
 * [Pagination](https://github.com/ComPHPPuebla/restful-extensions/blob/docs_examples/src/ComPHPPuebla/Paginator/README.md)
 * [Rest Resources](https://github.com/ComPHPPuebla/restful-extensions/blob/docs_examples/src/ComPHPPuebla/Rest/README.md)
-* [Hypermedia Formatting](https://github.com/ComPHPPuebla/restful-extensions/blob/docs_examples/src/ComPHPPuebla/Hypermedia/README.md)
+* [Hypermedia Information](https://github.com/ComPHPPuebla/restful-extensions/blob/docs_examples/src/ComPHPPuebla/Hypermedia/README.md)
+* [Hypermedia Rendering](https://github.com/ComPHPPuebla/restful-extensions/blob/docs_examples/src/ComPHPPuebla/Twig/README.md)
 * [Validation](https://github.com/ComPHPPuebla/restful-extensions/blob/docs_examples/src/ComPHPPuebla/Validator/README.md)
 * Table Gateway for persisting resources
 * Slim controllers and middleware
