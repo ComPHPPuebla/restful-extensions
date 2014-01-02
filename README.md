@@ -1,9 +1,9 @@
-# Restful extensions
+# RESTful extensions
 
 Extensions to create RESTful APIs.
 
-Run the examples in the "examples~ folder. You will have to first try the Symfony Console Commands
-in order to create the test database (SQLite), load data, and try the examples.
+Run the examples in the `examples` folder. You will have to first use one of the Symfony Console
+Commands in order to create the test database (SQLite), and load some data.
 
 ```bash
 $ ./bin/cli dbal:database:create

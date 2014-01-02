@@ -44,10 +44,14 @@ class PagerfantaPaginator implements Paginator
     }
 
     /**
-     * @param int $currentPage
+     * @param  int                     $currentPage
+     * @throws PageOutOfRangeException
      */
     public function setCurrentPage($currentPage)
     {
+        if ($currentPage > $this->pagerfanta->getNbPages()) {
+            throw new PageOutOfRangeException("Page $currentPage does not exists.");
+        }
         $this->pagerfanta->setCurrentPage($currentPage);
     }
 

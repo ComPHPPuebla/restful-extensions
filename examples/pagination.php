@@ -5,6 +5,7 @@ $autoloader->add('', __DIR__); //UserTable
 use \Doctrine\DBAL\DriverManager;
 use \ComPHPPuebla\Paginator\PagerfantaPaginator;
 use \ComPHPPuebla\Paginator\PagerfantaPaginatorFactory;
+use \ComPHPPuebla\Paginator\PageOutOfRangeException;
 
 $connection = DriverManager::getConnection([
     'path' => 'test.sq3',
@@ -33,4 +34,10 @@ if ($paginator->haveToPaginate()) {
     if ($paginator->hasNextPage()) {
         echo 'Next ', $paginator->getNextPage(), "\n";
     }
+}
+
+try {
+    $paginator->setCurrentPage(10);
+} catch (PageOutOfRangeException $e) {
+    echo 'Page 10 does not exist.';
 }

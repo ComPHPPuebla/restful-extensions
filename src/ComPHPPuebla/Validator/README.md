@@ -20,6 +20,8 @@ $validator = new ValitronValidator([
     ],
 ]);
 
+$resourceInfo = ['username' => 'montealegreluis'];
+
 if ($validator->isValid($resourceInfo)) {
     // Perform operations...
 } else {
@@ -30,7 +32,8 @@ if ($validator->isValid($resourceInfo)) {
 ```
 
 You can additionally pass a second argument to `ValitronValidator`'s constructor with the path to a
-translation file for the error messages. The file should return an array like the following:
+translation file (`en.php`) for the error messages. The file should return an array like the
+following:
 
 ```php
 return [

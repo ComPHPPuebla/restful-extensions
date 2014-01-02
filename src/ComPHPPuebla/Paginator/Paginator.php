@@ -9,7 +9,8 @@ interface Paginator
     public function getCurrentPageResults();
 
     /**
-     * @param int $currentPage
+     * @param  int                     $currentPage
+     * @throws PageOutOfRangeException
      */
     public function setCurrentPage($currentPage);
 
