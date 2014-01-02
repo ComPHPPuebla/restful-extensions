@@ -13,11 +13,13 @@ class CollectionFormatter extends HALFormatter
 
     /**
      * @param TwigExtension     $urlHelper
+     * @param string            $routeName
      * @param ResourceFormatter $formatter
      */
-    public function __construct(TwigExtension $urlHelper, ResourceFormatter $formatter)
+    public function __construct(TwigExtension $urlHelper, $routeName, ResourceFormatter $formatter)
     {
         $this->urlHelper = $urlHelper;
+        $this->routeName = $routeName;
         $this->formatter = $formatter;
     }
 
@@ -26,7 +28,7 @@ class CollectionFormatter extends HALFormatter
      */
     public function format($paginator, array $params)
     {
-        $routeName = $this->formatter->getRouteName();
+        $routeName = $this->routeName;
         $embedded = [];
         $resources = $paginator->getCurrentPageResults();
         foreach ($resources as $resource) {

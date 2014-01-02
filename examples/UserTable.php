@@ -34,5 +34,7 @@ class UserTable extends Table
     }
 
     public function delete($id)
-    {}
+    {
+        $this->doDelete(['user_id' => $id]);
+    }
 }

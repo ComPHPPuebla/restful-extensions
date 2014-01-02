@@ -37,12 +37,4 @@ class ResourceFormatter extends HALFormatter
 
         return $halResource;
     }
-
-    /**
-     * @return string
-     */
-    public function getRouteName()
-    {
-        return $this->routeName;
-    }
 }
