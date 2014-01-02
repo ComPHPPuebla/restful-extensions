@@ -34,21 +34,4 @@ class ResourceCollection
     {
         return $this->paginatorFactory->createPaginator($criteria, $this->table);
     }
-
-    /**
-     * @param  int   $id
-     * @return array
-     */
-    public function retrieveOne($id)
-    {
-        return $this->table->find($id);
-    }
-
-    /**
-     * @param int $id
-     */
-    public function delete($id)
-    {
-        $this->table->delete($id);
-    }
 }

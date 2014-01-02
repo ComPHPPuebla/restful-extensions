@@ -18,10 +18,20 @@ class UserTable extends Table
     }
 
     public function find($id)
-    {}
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->select('*')->from('users', 'u')->where('user_id = :userId');
+        $qb->setParameter('userId', $id);
+
+        return $this->fetchAssoc($qb->getSQL(), $qb->getParameters());
+    }
 
     public function update(array $values, $id)
-    {}
+    {
+        $this->doUpdate($values, ['user_id' => $id]);
+
+        return $this->find($id);
+    }
 
     public function delete($id)
     {}

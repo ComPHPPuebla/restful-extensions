@@ -48,6 +48,23 @@ class Resource implements Validator
     }
 
     /**
+     * @param int $id
+     */
+    public function delete($id)
+    {
+        $this->table->delete($id);
+    }
+
+    /**
+     * @param  int   $id
+     * @return array
+     */
+    public function retrieveOne($id)
+    {
+        return $this->table->find($id);
+    }
+
+    /**
      * @param  array   $values
      * @return boolean
      */

@@ -31,13 +31,13 @@ using Doctrine DBAL but you could switch to another implementation.
 
 ```php
 use \Doctrine\DBAL\DriverManager;
-use \ComPHPPuebla\Rest\ResourceCollection;
+use \ComPHPPuebla\Rest\Resource;
 
 $connection = DriverManager::getConnection(['path' => 'test.sq3', 'driver' => 'pdo_sqlite']);
 
-$usersCollection = new ResourceCollection(new UserTable('users', $connection));
+$userResource = new Resource(new UserTable('users', $connection));
 
-$user = $usersCollection->retrieveOne($id = 1);
+$user = $userResource->retrieveOne($id = 1);
 
 echo $user['username'];
 ```
@@ -67,7 +67,7 @@ $user = new Resource(new UserTable('users', $connection), $validator);
 $userInfo = ['username' => 'montealegreluis', 'password' => 'changeme'];
 
 if ($user->isValid($userInfo)) {
-    $user->create($userInfo);
+    $newUser = $user->create($userInfo);
 } else {
     foreach($user->errors() as $userProperty => $messages) {
         echo "'$userProperty' errors: ", implode(', ', $messages), "\n";
@@ -111,13 +111,13 @@ Deleting a resource works the following way:
 
 ```php
 use \Doctrine\DBAL\DriverManager;
-use \ComPHPPuebla\Rest\ResourceCollection;
+use \ComPHPPuebla\Rest\Resource;
 
 $connection = DriverManager::getConnection(['path' => 'test.sq3', 'driver' => 'pdo_sqlite']);
 
-$usersCollection = new ResourceCollection(new UserTable('users', $connection));
+$user = new Resource(new UserTable('users', $connection));
 
-$usersCollection->delete($id = 1);
+$user->delete($id = 1);
 ```
 
 If you want to provide a single resource or a collection of resources OPTIONS you can do it the
@@ -132,6 +132,6 @@ $usersOptions = new ResourceOptions(
     $collectionOptions = ['GET', 'POST', 'OPTIONS']
 );
 
-echo implode(', ', $usersOptions->getOptions()), "\n";
-echo implode(', ', $usersOptions->getCollectionOptions()), "\n";
+echo 'Resource OPTIONS ', implode(', ', $usersOptions->getOptions()), "\n";
+echo 'Resource collection OPTIONS ', implode(', ', $usersOptions->getCollectionOptions()), "\n";
 ```

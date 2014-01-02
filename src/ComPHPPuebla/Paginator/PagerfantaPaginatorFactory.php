@@ -7,7 +7,7 @@ use \Doctrine\DBAL\Query\QueryBuilder;
 use \Pagerfanta\Adapter\AdapterInterface;
 use \Pagerfanta\Adapter\DoctrineDbalAdapter;
 
-class PagerfantaPaginatorFactory
+class PagerfantaPaginatorFactory implements PaginatorFactory
 {
     /**
      * @var PagerfantaPaginator

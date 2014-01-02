@@ -7,7 +7,15 @@ Commands in order to create the test database (SQLite), and load some data.
 
 ```bash
 $ ./bin/cli dbal:database:create
-$ sqlite test.sq3 < examples/import.sql
+$ sqlite3 test.sq3 < examples/import.sql
+```
+
+To reset the `examples` database you can drop the database and load the data again.
+
+```bash
+$ ./bin/cli dbal:database:drop --force
+$ ./bin/cli dbal:database:create
+$ sqlite3 test.sq3 < examples/import.sql
 ```
 
 You can also check the documentation of individual packages.
